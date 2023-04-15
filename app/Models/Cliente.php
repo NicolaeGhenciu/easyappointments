@@ -20,7 +20,6 @@ class Cliente extends Model
         'fecha_nacimiento',
         'direccion',
         'telefono',
-        'email',
         'provincia_id',
         'municipio_id'
     ];

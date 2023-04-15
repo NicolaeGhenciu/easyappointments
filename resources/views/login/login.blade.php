@@ -6,28 +6,38 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
-    <link rel="stylesheet" href="{{ asset('css/login.css') }}">
+
+    <script src={{ asset('js/login.js') }}></script>
+
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
     <script src="https://code.jquery.com/jquery-3.6.3.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
         integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
+
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2/dist/umd/popper.min.js"></script>
+
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
-    <script src={{ asset('js/login.js') }}></script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Yantramanav&display=swap');
 
         * {
             font-family: 'Yantramanav', sans-serif;
         }
+
+        body {
+            background-color: rgb(84, 144, 254)
+        }
     </style>
 </head>
 
 <body>
-    <div class="vh-100 d-flex justify-content-center align-items-center">
+    <div class="d-flex justify-content-center align-items-center mt-3 mb-3 mx-3">
         <div class="col-md-6 p-5 shadow-sm border rounded-5 bg-white" style="border-radius: 2%">
-            <h3 class="text-center mb-4 text-primary"><svg height="40px" width="40px" version="1.1" id="Layer_1"
+            <h3 class="text-center mb-2 text-primary"><svg height="40px" width="40px" version="1.1" id="Layer_1"
                     xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512"
                     xml:space="preserve" fill="#000000">
                     <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
@@ -56,6 +66,14 @@
             <form id="login-form" action="{{ route('login') }}" method="post"
                 @if (old('role') === 'empresa' || old('role') === 'cliente') style="display: none" @endif>
                 @csrf
+
+                <hr>
+
+                @if (session()->has('message'))
+                    <div class="alert alert-success">
+                        {{ session()->get('message') }}
+                    </div>
+                @endif
 
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Email:</label>
@@ -88,6 +106,7 @@
             </form>
 
             <div id="register-form" style="display: none">
+                <hr>
                 <h3 class="d-flex justify-content-center">¿Que eres?</h3>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
@@ -187,16 +206,16 @@
                             </select>
                         </div>
 
-                        {{-- <div class="col">
+                        <div class="col">
                             <label for="municipio" class="form-label">Municipio:</label>
                             <select class="form-select" name="municipio_id">
                                 @foreach ($municipios as $municipio)
                                     <option value="{{ $municipio->id }}"
-                                        {{ old('provincia_id') == $municipio->id ? 'selected' : '' }}>
+                                        {{ old('municipio_id') == $municipio->id ? 'selected' : '' }}>
                                         {{ $municipio->municipio }}</option>
                                 @endforeach
                             </select>
-                        </div> --}}
+                        </div>
 
                     </div>
 
@@ -223,7 +242,7 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Nombre o razón social:</label>
+                            <label for="exampleInputEmail1" class="form-label">Razón social:</label>
                             <input type="text" class="form-control border border-primary" name="nombre"
                                 value="{{ old('nombre') }}">
                             {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
@@ -270,6 +289,32 @@
                             <input type="number" class="form-control border border-primary" name="telefono"
                                 value="{{ old('telefono') }}">
                             {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                        </div>
+
+                    </div>
+
+                    <div class="row mb-3">
+
+                        <div class="col">
+                            <label for="provincia" class="form-label">Provincia:</label>
+                            <select class="form-select" name="provincia_id">
+                                @foreach ($provincias as $provincia)
+                                    <option value="{{ $provincia->id }}"
+                                        {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
+                                        {{ $provincia->provincia }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+
+                        <div class="col">
+                            <label for="municipio" class="form-label">Municipio:</label>
+                            <select class="form-select" name="municipio_id">
+                                @foreach ($municipios as $municipio)
+                                    <option value="{{ $municipio->id }}"
+                                        {{ old('municipio_id') == $municipio->id ? 'selected' : '' }}>
+                                        {{ $municipio->municipio }}</option>
+                                @endforeach
+                            </select>
                         </div>
 
                     </div>

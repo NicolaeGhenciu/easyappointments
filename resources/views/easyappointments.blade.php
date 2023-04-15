@@ -2,6 +2,10 @@
 
 @extends('base')
 
+@section('title')
+Noticias
+@endsection
+
 @section('contenido')
 <h1>Bienvenido a EasyAppointments</h1>
 <hr>

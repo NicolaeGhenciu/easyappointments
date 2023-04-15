@@ -14,7 +14,7 @@ class UserController extends Controller
 {
     public function crearUsuarioEmpresa()
     {
-        
+
         $datos = request()->merge(['role' => 'empresa'])->all();
 
         $datos = request()->validate([
@@ -24,25 +24,28 @@ class UserController extends Controller
             'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
             'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
             'direccion' => 'required|min:6|max:100',
+            'provincia_id' => 'required',
+            'municipio_id' => 'required',
+            'email' => 'required',
             'role' => '',
         ]);
 
         $datos['password'] = Hash::make($datos['password']);
-        
+
         $empresa = Empresa::create($datos);
-        
+
         $datos['empresa_id'] = $empresa->id;
 
         User::create($datos);
 
-        session()->flash('message', 'El empleado ha sido registrado correctamente.');
+        session()->flash('message', 'Empresa registrado correctamente.');
 
-        return redirect()->route('noticias');
+        return back();
     }
 
     public function crearUsuarioCliente()
     {
-        
+
         $datos = request()->merge(['role' => 'cliente'])->all();
 
         $datos = request()->validate([
@@ -50,9 +53,10 @@ class UserController extends Controller
             'nombre' => 'required|min:3|max:100',
             'apellidos' => 'required|min:3|max:100',
             'fecha_nacimiento' => 'required',
+            'email' => 'required',
+            'password' => 'required',
             'direccion' => 'required|min:6|max:100',
             'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
-            'email' => 'required|email',
             'provincia_id' => 'required',
             'municipio_id' => 'required',
             'role' => '',
@@ -60,14 +64,16 @@ class UserController extends Controller
 
         $datos['password'] = Hash::make($datos['password']);
 
+        $datos['nombre'] =  $datos['nombre'] . " " . $datos['apellidos'];
+
         $cliente = Cliente::create($datos);
-        
+
         $datos['cliente_id'] = $cliente->id;
 
         User::create($datos);
 
-        session()->flash('message', 'El empleado ha sido registrado correctamente.');
+        session()->flash('message', 'Cliente registrado correctamente.');
 
-        return redirect()->route('noticias');
+        return back();
     }
 }

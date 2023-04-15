@@ -91,7 +91,7 @@
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-expanded="false">
-                    Hello, John Doe
+                    {{ Auth::user()->nombre }}
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
                     <li><a class="dropdown-item" href="#">Settings</a></li>
@@ -138,7 +138,7 @@
                     <ul class="nav m-0">
                         <li class="nav-item">
                             <a class="nav-link text-secondary" href="https://github.com/NicolaeGhenciu"><i
-                                class="bi bi-github"></i>&nbsp;Github</a>
+                                    class="bi bi-github"></i>&nbsp;Github</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link text-secondary" href="#">Ghenciu Nicolae Adrian</a>

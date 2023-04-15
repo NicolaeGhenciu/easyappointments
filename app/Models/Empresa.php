@@ -16,8 +16,9 @@ class Empresa extends Model
     protected $fillable = [
         'cif',
         'nombre',
-        'direccion',
         'telefono',
-        'email'
+        'direccion',
+        'provincia_id',
+        'municipio_id'
     ];
 }
