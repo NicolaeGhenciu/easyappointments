@@ -32,6 +32,25 @@
             background-color: rgb(84, 144, 254)
         }
     </style>
+
+    <script>
+        function getMunicipios(provinciaId, municipioId) {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/municipiosPorProvincia') }}/" + provinciaId,
+                success: function(data) {
+                    $(municipioId).empty();
+                    $.each(data, function(i, item) {
+                        $(municipioId).append($('<option>', {
+                            value: item.id,
+                            text: item.municipio
+                        }));
+                    });
+                    $(municipioId).prop('disabled', false);
+                }
+            });
+        }
+    </script>
 </head>
 
 <body>
@@ -197,7 +216,8 @@
 
                         <div class="col">
                             <label for="provincia" class="form-label">Provincia:</label>
-                            <select class="form-select" name="provincia_id">
+                            <select class="form-select" name="provincia_id" id="provincia_id"
+                                onchange="getMunicipios(this.value, '#municipio_id')">
                                 @foreach ($provincias as $provincia)
                                     <option value="{{ $provincia->id }}"
                                         {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
@@ -208,12 +228,7 @@
 
                         <div class="col">
                             <label for="municipio" class="form-label">Municipio:</label>
-                            <select class="form-select" name="municipio_id">
-                                @foreach ($municipios as $municipio)
-                                    <option value="{{ $municipio->id }}"
-                                        {{ old('municipio_id') == $municipio->id ? 'selected' : '' }}>
-                                        {{ $municipio->municipio }}</option>
-                                @endforeach
+                            <select class="form-select" name="municipio_id" id="municipio_id" disabled>
                             </select>
                         </div>
 
@@ -297,7 +312,8 @@
 
                         <div class="col">
                             <label for="provincia" class="form-label">Provincia:</label>
-                            <select class="form-select" name="provincia_id">
+                            <select class="form-select" name="provincia_id" id="provincia_id_2"
+                                onchange="getMunicipios(this.value, '#municipio_id_2')">
                                 @foreach ($provincias as $provincia)
                                     <option value="{{ $provincia->id }}"
                                         {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
@@ -308,12 +324,7 @@
 
                         <div class="col">
                             <label for="municipio" class="form-label">Municipio:</label>
-                            <select class="form-select" name="municipio_id">
-                                @foreach ($municipios as $municipio)
-                                    <option value="{{ $municipio->id }}"
-                                        {{ old('municipio_id') == $municipio->id ? 'selected' : '' }}>
-                                        {{ $municipio->municipio }}</option>
-                                @endforeach
+                            <select class="form-select" name="municipio_id" id="municipio_id_2" disabled>
                             </select>
                         </div>
 

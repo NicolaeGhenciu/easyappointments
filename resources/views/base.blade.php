@@ -39,6 +39,29 @@
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
 
+    <script src={{ asset('js/base.js') }}></script>
+
+    <script>
+        window.onload = function() {
+            document.getElementById('logout-link').addEventListener('click', function(event) {
+                event.preventDefault();
+
+                var form = document.createElement('form');
+                form.setAttribute('method', 'POST');
+                form.setAttribute('action', "{{ route('logout') }}");
+
+                var csrfField = document.createElement('input');
+                csrfField.setAttribute('type', 'hidden');
+                csrfField.setAttribute('name', '_token');
+                csrfField.setAttribute('value', '{{ csrf_token() }}');
+
+                form.appendChild(csrfField);
+                document.body.appendChild(form);
+                form.submit();
+            });
+        }
+    </script>
+
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Yantramanav&display=swap');
 
@@ -93,10 +116,10 @@
                     data-toggle="dropdown" aria-expanded="false">
                     {{ Auth::user()->nombre }}
                 </button>
-                <ul class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#">Settings</a></li>
-                    <li><a class="dropdown-item" href="#">Messages</a></li>
-                    <li><a class="dropdown-item" href="#">Sign out</a></li>
+                <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear"></i> Mi cuenta</a></li>
+                    <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-door-closed-fill"></i>
+                            Cerrar sesión</a></li>
                 </ul>
             </div>
         </div>
@@ -107,25 +130,19 @@
                 <div class="position-sticky">
                     <ul class="nav flex-column">
                         <li class="nav-item">
-                            <a class="nav-link active" aria-current="page" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-home">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
-                                    <polyline points="9 22 9 12 15 12 15 22"></polyline>
-                                </svg>
+                            <a class="nav-link {{ request()->routeIs('easyappointments') ? 'active' : '' }}"
+                                aria-current="page" href="{{ route('easyappointments') }}" aria-current="page"
+                                href="{{ route('easyappointments') }}">
+                                <i class="bi bi-house-fill"></i>
                                 <span class="ml-2">Home</span>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="#">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" class="feather feather-file">
-                                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"></path>
-                                    <polyline points="13 2 13 9 20 9"></polyline>
-                                </svg>
-                                <span class="ml-2">Location</span>
+                            <a class="nav-link {{ request()->routeIs('listarEmpleados') ? 'active' : '' }}"
+                                aria-current="page" href="{{ route('listarEmpleados') }}"
+                                href="{{ route('listarEmpleados') }}">
+                                <i class="bi bi-people-fill"></i>
+                                <span class="ml-2">Listar Empleados</span>
                             </a>
                         </li>
                     </ul>

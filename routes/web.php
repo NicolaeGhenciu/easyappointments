@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -15,6 +17,7 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
+//Login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
 
 Route::post('/login', [AuthController::class, 'login'])->name('login');
@@ -23,12 +26,16 @@ Route::post('crearUsuarioEmpresa', [UserController::class, 'crearUsuarioEmpresa'
 
 Route::post('crearUsuarioCliente', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
 
-Route::get('/welcome', function () {
-    return view('welcome');
-});
+Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
+//Peticion JSON
+Route::get('/municipiosPorProvincia/{provincia_id}', [MunicipioController::class, 'municipiosPorProvincia']);
+
+//Menu Principal
 Route::get('/easyappointments', function () {
     return view('easyappointments');
 })->name('easyappointments');
 
-
+//Empleado
+Route::get('/listarEmpleados', [EmpleadoController::class, 'listar'])->name('listarEmpleados');
+Route::delete('/borrarEmpleado/{id}', [EmpleadoController::class, 'borrar'])->name('borrarEmpleado');
