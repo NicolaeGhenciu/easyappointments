@@ -14,7 +14,7 @@ class Cliente extends Model
     protected $table = 'clientes';
 
     protected $fillable = [
-        'dni',
+        'nif',
         'nombre',
         'apellidos',
         'fecha_nacimiento',

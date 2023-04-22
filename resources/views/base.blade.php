@@ -22,9 +22,7 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet"
         integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD" crossorigin="anonymous">
 
-    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
-        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous">
-    </script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-kenU1KFdBIe4zVF0s0G1M5b4hcpxyD9F7jL+jjXkk+Q2h455rYXK/7HAuoJl+0I4" crossorigin="anonymous">
@@ -59,6 +57,11 @@
                 document.body.appendChild(form);
                 form.submit();
             });
+
+            var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'))
+            var tooltipList = tooltipTriggerList.map(function(tooltipTriggerEl) {
+                return new bootstrap.Tooltip(tooltipTriggerEl)
+            })
         }
     </script>
 
@@ -137,14 +140,15 @@
                                 <span class="ml-2">Home</span>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a class="nav-link {{ request()->routeIs('listarEmpleados') ? 'active' : '' }}"
-                                aria-current="page" href="{{ route('listarEmpleados') }}"
-                                href="{{ route('listarEmpleados') }}">
-                                <i class="bi bi-people-fill"></i>
-                                <span class="ml-2">Listar Empleados</span>
-                            </a>
-                        </li>
+                        @if (Auth::check() && Auth::user()->role == 'empresa')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarEmpleados') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarEmpleados') }}">
+                                    <i class="bi bi-people-fill"></i>
+                                    <span class="ml-2">Listar Empleados</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </nav>

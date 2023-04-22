@@ -2,13 +2,14 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Rules\CifRules;
 use App\Rules\DniRule;
 use App\Models\User;
 use App\Models\Empresa;
 use App\Models\Cliente;
+use App\Models\Empleado;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -26,7 +27,6 @@ class UserController extends Controller
             'direccion' => 'required|min:6|max:100',
             'provincia_id' => 'required',
             'municipio_id' => 'required',
-            'email' => 'required',
             'role' => '',
         ]);
 
@@ -49,12 +49,12 @@ class UserController extends Controller
         $datos = request()->merge(['role' => 'cliente'])->all();
 
         $datos = request()->validate([
-            'dni' => ['required', new DniRule],
+            'nif' => ['required', new DniRule],
             'nombre' => 'required|min:3|max:100',
             'apellidos' => 'required|min:3|max:100',
             'fecha_nacimiento' => 'required',
-            'email' => 'required',
-            'password' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
             'direccion' => 'required|min:6|max:100',
             'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
             'provincia_id' => 'required',
@@ -64,8 +64,6 @@ class UserController extends Controller
 
         $datos['password'] = Hash::make($datos['password']);
 
-        $datos['nombre'] =  $datos['nombre'] . " " . $datos['apellidos'];
-
         $cliente = Cliente::create($datos);
 
         $datos['cliente_id'] = $cliente->id;
@@ -73,6 +71,41 @@ class UserController extends Controller
         User::create($datos);
 
         session()->flash('message', 'Cliente registrado correctamente.');
+
+        return back();
+    }
+
+    public function crearUsuarioEmpleado()
+    {
+
+        $datos = request()->merge(['role' => 'empleado'])->all();
+
+        $datos = request()->validate([
+            'nif' => ['required', new DniRule],
+            'nombre' => 'required|min:3|max:100',
+            'apellidos' => 'required|min:3|max:100',
+            'cargo' => 'required|min:2|max:100',
+            'fecha_nacimiento' => 'required',
+            'email' => 'required|email',
+            'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
+            'direccion' => 'required|min:6|max:100',
+            'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
+            'provincia_id' => 'required',
+            'municipio_id' => 'required',
+            'role' => '',
+        ]);
+
+        $datos['password'] = Hash::make($datos['password']);
+
+        $datos['id_empresa'] = Auth::user()->empresa_id;
+
+        $empleado = Empleado::create($datos);
+
+        $datos['empleado_id'] = $empleado->id;
+
+        User::create($datos);
+
+        session()->flash('message', 'Empleado dado de alta correctamente.');
 
         return back();
     }

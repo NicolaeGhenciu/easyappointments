@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
+    <title>Login</title>
 
     <script src={{ asset('js/login.js') }}></script>
 
@@ -95,17 +95,24 @@
                 @endif
 
                 <div class="mb-3">
-                    <label for="exampleInputEmail1" class="form-label">Email:</label>
-                    <input type="email" class="form-control border border-primary" id="exampleInputEmail1"
-                        aria-describedby="emailHelp" name="email">
-                    {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                    <label class="form-label">Email:</label>
+                    <input type="email" class="form-control border border-primary" name="email">
+                    @if ($errors->has('email'))
+                        <div class="alert alert-danger mt-1">
+                            {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                        </div>
+                    @endif
                 </div>
 
                 <div class="mb-3">
-                    <label for="exampleInputPassword1" class="form-label">Contraseña: </label>
-                    <input type="password" class="form-control border border-primary" id="exampleInputPassword1"
-                        name="password">
-                    {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                    <label class="form-label">Contraseña: </label>
+                    <input type="password" class="form-control border border-primary" name="password">
+                    @if ($errors->has('password'))
+                        <div class="alert alert-danger mt-1">
+                            {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                        </div>
+                    @endif
+
                 </div>
 
                 <p class="small"><a class="text-primary" href=""></a></p>
@@ -146,50 +153,74 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Nombre:</label>
+                            <label class="form-label">Nombre:</label>
                             <input type="text" class="form-control border border-primary" name="nombre"
-                                value="{{ old('nnombreame') }}">
-                            {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                value="{{ old('nombre') }}">
+                            @if ($errors->has('nombre'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Apellidos:</label>
+                            <label class="form-label">Apellidos:</label>
                             <input type="text" class="form-control border border-primary" name="apellidos"
                                 value="{{ old('apellidos') }}">
-                            {!! $errors->first('apellidos', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('apellidos'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('apellidos', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
                     <div class="row mb-3">
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Fecha de nacimiento:</label>
+                            <label class="form-label">Fecha de nacimiento:</label>
                             <input type="date" class="form-control border border-primary" name="fecha_nacimiento"
                                 value="{{ old('fecha_nacimiento') }}">
-                            {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('fecha_nacimiento'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">DNI:</label>
-                            <input type="text" class="form-control border border-primary" name="dni"
-                                value="{{ old('dni') }}">
-                            {!! $errors->first('dni', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            <label class="form-label">NIF:</label>
+                            <input type="text" class="form-control border border-primary" name="nif"
+                                value="{{ old('nif') }}">
+                            @if ($errors->has('nif'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('nif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Email:</label>
+                            <label class="form-label">Email:</label>
                             <input type="email" class="form-control border border-primary" name="email"
                                 value="{{ old('email') }}">
-                            {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('email'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputPassword1" class="form-label">Contraseña: </label>
+                            <label class="form-label">Contraseña: </label>
                             <input type="password" class="form-control border border-primary" name="password"
                                 value="{{ old('password') }}">
-                            {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('password'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -197,17 +228,25 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Dirección:</label>
+                            <label class="form-label">Dirección:</label>
                             <input type="text" class="form-control border border-primary" name="direccion"
                                 value="{{ old('direccion') }}">
-                            {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('direccion'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Teléfono:</label>
+                            <label class="form-label">Teléfono:</label>
                             <input type="number" class="form-control border border-primary" name="telefono"
                                 value="{{ old('telefono') }}">
-                            {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('telefono'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -215,21 +254,32 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="provincia" class="form-label">Provincia:</label>
+                            <label for="provincia_id" class="form-label">Provincia:</label>
                             <select class="form-select" name="provincia_id" id="provincia_id"
                                 onchange="getMunicipios(this.value, '#municipio_id')">
+                                <option value="" disabled selected>Seleccione una provincia</option>
                                 @foreach ($provincias as $provincia)
                                     <option value="{{ $provincia->id }}"
                                         {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
                                         {{ $provincia->provincia }}</option>
                                 @endforeach
                             </select>
+                            @if ($errors->has('provincia_id'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="municipio" class="form-label">Municipio:</label>
+                            <label for="municipio_id" class="form-label">Municipio:</label>
                             <select class="form-select" name="municipio_id" id="municipio_id" disabled>
                             </select>
+                            @if ($errors->has('municipio_id'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -257,35 +307,50 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Razón social:</label>
+                            <label class="form-label">Razón social:</label>
                             <input type="text" class="form-control border border-primary" name="nombre"
                                 value="{{ old('nombre') }}">
-                            {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
-
+                            @if ($errors->has('nombre'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">CIF:</label>
+                            <label class="form-label">CIF:</label>
                             <input type="text" class="form-control border border-primary" name="cif"
                                 value="{{ old('cif') }}">
-                            {!! $errors->first('cif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('cif'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('cif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
                     </div>
 
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Email:</label>
+                            <label class="form-label">Email:</label>
                             <input type="email" class="form-control border border-primary" name="email"
                                 value="{{ old('email') }}">
-                            {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('email'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
                             <label for="exampleInputPassword1" class="form-label">Contraseña: </label>
                             <input type="password" class="form-control border border-primary" name="password"
                                 value="{{ old('password') }}">
-                            {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('password'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -293,17 +358,25 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Dirección:</label>
+                            <label class="form-label">Dirección:</label>
                             <input type="text" class="form-control border border-primary" name="direccion"
                                 value="{{ old('direccion') }}">
-                            {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('direccion'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="exampleInputEmail1" class="form-label">Teléfono:</label>
+                            <label class="form-label">Teléfono:</label>
                             <input type="number" class="form-control border border-primary" name="telefono"
                                 value="{{ old('telefono') }}">
-                            {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                            @if ($errors->has('telefono'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
@@ -311,21 +384,32 @@
                     <div class="row mb-3">
 
                         <div class="col">
-                            <label for="provincia" class="form-label">Provincia:</label>
-                            <select class="form-select" name="provincia_id" id="provincia_id_2"
-                                onchange="getMunicipios(this.value, '#municipio_id_2')">
+                            <label for="provincia_id" class="form-label">Provincia:</label>
+                            <select class="form-select" name="provincia_id" id="provincia_id"
+                                onchange="getMunicipios(this.value, '#municipio_id')">
+                                <option value="" disabled selected>Seleccione una provincia</option>
                                 @foreach ($provincias as $provincia)
                                     <option value="{{ $provincia->id }}"
                                         {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
                                         {{ $provincia->provincia }}</option>
                                 @endforeach
                             </select>
+                            @if ($errors->has('provincia_id'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                         <div class="col">
-                            <label for="municipio" class="form-label">Municipio:</label>
-                            <select class="form-select" name="municipio_id" id="municipio_id_2" disabled>
+                            <label for="municipio_id" class="form-label">Municipio:</label>
+                            <select class="form-select" name="municipio_id" id="municipio_id" disabled>
                             </select>
+                            @if ($errors->has('municipio_id'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
                         </div>
 
                     </div>
