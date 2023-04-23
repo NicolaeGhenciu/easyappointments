@@ -45,7 +45,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Comprobamos el rol
     Route::middleware(['empresa'])->group(function () {
-        
+
         // -- Empleado
 
         //Listar
@@ -54,5 +54,7 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/borrarEmpleado/{id}', [EmpleadoController::class, 'borrar'])->name('borrarEmpleado');
         //Dar de alta a un empleado
         Route::post('crearUsuarioEmpleado', [UserController::class, 'crearUsuarioEmpleado'])->name('crearUsuarioEmpleado');
+        //Modificar a un empleado
+        Route::put('modificarEmpleado/{id}', [EmpleadoController::class, 'modificar'])->name('modificarEmpleado');
     });
 });

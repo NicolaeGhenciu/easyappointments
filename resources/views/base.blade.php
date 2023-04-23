@@ -120,7 +120,8 @@
                     {{ Auth::user()->nombre }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-gear"></i> Mi cuenta</a></li>
+                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill-gear"></i></i> Mi cuenta</a>
+                    </li>
                     <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-door-closed-fill"></i>
                             Cerrar sesión</a></li>
                 </ul>
@@ -154,6 +155,7 @@
             </nav>
             <main class="col-md-9 ml-sm-auto col-lg-10 px-md-4 py-4">
                 @yield('contenido')
+                @yield('modals')
                 <footer class="pt-5 d-flex justify-content-between">
                     <span class="text-secondary">Copyright © 2023 EasyAppointments</span>
                     <ul class="nav m-0">

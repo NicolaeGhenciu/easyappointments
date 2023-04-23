@@ -39,6 +39,6 @@ class DniRule implements Rule
      */
     public function message()
     {
-        return 'El DNI es inválido.';
+        return 'El NIF es inválido.';
     }
 }

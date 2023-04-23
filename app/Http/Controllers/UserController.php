@@ -80,6 +80,8 @@ class UserController extends Controller
 
         $datos = request()->merge(['role' => 'empleado'])->all();
 
+        session()->flash('crear');
+
         $datos = request()->validate([
             'nif' => ['required', new DniRule],
             'nombre' => 'required|min:3|max:100',
@@ -104,6 +106,8 @@ class UserController extends Controller
         $datos['empleado_id'] = $empleado->id;
 
         User::create($datos);
+
+        session()->forget('crear');
 
         session()->flash('message', 'Empleado dado de alta correctamente.');
 
