@@ -23,21 +23,6 @@ class EmpleadoController extends Controller
         return view('empleado.lista', ['empleados' => $empleados, 'provincias' => $provincias, 'municipios' => $municipios]);
     }
 
-    public function borrar($id)
-    {
-        $empleado = Empleado::where('id_empleado', $id);
-        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
-
-        if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
-            session()->flash('error', 'No tienes permiso para eliminar a este empleado.');
-            return redirect()->route('listarEmpleados');
-        }
-
-        $empleado->delete();
-        session()->flash('message', "$empleadoDatos->nombre $empleadoDatos->apellidos ha sido dado de baja correctamente.");
-        return redirect()->route('listarEmpleados');
-    }
-
     public function modificar($id)
     {
         $empleado = Empleado::where('id_empleado', $id);
@@ -68,6 +53,21 @@ class EmpleadoController extends Controller
 
         session()->flash('message', "Los datos de " . $datos['nombre'] . " " . $datos['apellidos'] . "han sido modificado correctamente.");
 
+        return redirect()->route('listarEmpleados');
+    }
+
+    public function borrar($id)
+    {
+        $empleado = Empleado::where('id_empleado', $id);
+        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
+
+        if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
+            session()->flash('error', 'No tienes permiso para eliminar a este empleado.');
+            return redirect()->route('listarEmpleados');
+        }
+
+        $empleado->delete();
+        session()->flash('message', "$empleadoDatos->nombre $empleadoDatos->apellidos ha sido dado de baja correctamente.");
         return redirect()->route('listarEmpleados');
     }
 }

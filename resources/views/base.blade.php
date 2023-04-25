@@ -117,6 +117,13 @@
             <div class="dropdown">
                 <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-expanded="false">
+                    @if (Auth::user()->role == 'empresa')
+                        <i class="bi bi-building-fill"></i>
+                    @elseif (Auth::user()->role == 'empleado')
+                        <i class="bi bi-person-circle"></i></i>
+                    @elseif (Auth::user()->role == 'cliente')
+                        <i class="bi bi-person-fill"></i>
+                    @endif
                     {{ Auth::user()->nombre }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
@@ -146,7 +153,15 @@
                                 <a class="nav-link {{ request()->routeIs('listarEmpleados') ? 'active' : '' }}"
                                     aria-current="page" href="{{ route('listarEmpleados') }}">
                                     <i class="bi bi-people-fill"></i>
-                                    <span class="ml-2">Listar Empleados</span>
+                                    <span class="ml-2">Gestionar Empleados</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarServicios') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarServicios') }}" aria-current="page"
+                                    href="{{ route('listarServicios') }}">
+                                    <i class="bi bi-bag-fill"></i>
+                                    <span class="ml-2">Gestionar Servicios</span>
                                 </a>
                             </li>
                         @endif

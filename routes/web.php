@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\MunicipioController;
+use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UserController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,18 +44,29 @@ Route::middleware(['auth'])->group(function () {
         return view('easyappointments');
     })->name('easyappointments');
 
-    //Comprobamos el rol
+    //Rol Empresa
     Route::middleware(['empresa'])->group(function () {
 
-        // -- Empleado
+        // --- Empleado
 
         //Listar
         Route::get('/listarEmpleados', [EmpleadoController::class, 'listar'])->name('listarEmpleados');
-        //Borrar
+        //Dar de alta un empleado
+        Route::post('/crearUsuarioEmpleado', [UserController::class, 'crearUsuarioEmpleado'])->name('crearUsuarioEmpleado');
+        //Modificar un empleado
+        Route::put('/modificarEmpleado/{id}', [EmpleadoController::class, 'modificar'])->name('modificarEmpleado');
+        //Borrar un empleado
         Route::delete('/borrarEmpleado/{id}', [EmpleadoController::class, 'borrar'])->name('borrarEmpleado');
-        //Dar de alta a un empleado
-        Route::post('crearUsuarioEmpleado', [UserController::class, 'crearUsuarioEmpleado'])->name('crearUsuarioEmpleado');
-        //Modificar a un empleado
-        Route::put('modificarEmpleado/{id}', [EmpleadoController::class, 'modificar'])->name('modificarEmpleado');
+
+        // --- Servicios
+
+        //Listar
+        Route::get('/listarServicios', [ServicioController::class, 'listar'])->name('listarServicios');
+        //Dar de alta a un servicio
+        Route::post('/crearServicio', [ServicioController::class, 'crear'])->name('crearServicio');
+        //Modificar un servicio
+        Route::put('/modificarServicio/{id}', [ServicioController::class, 'modificar'])->name('modificarServicio');
+        //Borrar un servicio
+        Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
     });
 });

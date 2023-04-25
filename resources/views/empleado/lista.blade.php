@@ -3,7 +3,7 @@
 @extends('base')
 
 @section('title')
-    Empleados
+    Gestionar empleados
 @endsection
 
 @section('linkScript')
@@ -69,26 +69,7 @@
                 });
             }
 
-        })
-
-        //Funcion que mdifica el select de municipios con los de la provincia correspondiente
-
-        function getMunicipios(provinciaId, municipioId) {
-            $.ajax({
-                type: "GET",
-                url: "{{ url('/municipiosPorProvincia') }}/" + provinciaId,
-                success: function(data) {
-                    $(municipioId).empty();
-                    $.each(data, function(i, item) {
-                        $(municipioId).append($('<option>', {
-                            value: item.id,
-                            text: item.municipio
-                        }));
-                    });
-                    $(municipioId).prop('disabled', false);
-                }
-            });
-        }
+        });
 
         //Esta funcion se activa al clicar el boton de modificar empleado y se encarga de cargar los datos del empleado.
 
@@ -106,6 +87,25 @@
                 var url = "{{ route('modificarEmpleado', ['id' => '0']) }}";
                 url = url.replace('0', empleado.id_empleado);
                 $('#modificar-empleado-form').attr('action', url);
+            });
+        }
+
+        //Funcion que mdifica el select de municipios con los de la provincia correspondiente
+
+        function getMunicipios(provinciaId, municipioId) {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/municipiosPorProvincia') }}/" + provinciaId,
+                success: function(data) {
+                    $(municipioId).empty();
+                    $.each(data, function(i, item) {
+                        $(municipioId).append($('<option>', {
+                            value: item.id,
+                            text: item.municipio
+                        }));
+                    });
+                    $(municipioId).prop('disabled', false);
+                }
             });
         }
     </script>
@@ -137,8 +137,9 @@
     <div class="container">
         <div class="row align-items-center">
             <div class="col-auto">
-                <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"><i
-                        class="bi bi-person-fill-add"></i></a>
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Alta de un empleado">
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"><i
+                            class="bi bi-person-fill-add"></i></a></span>
             </div>
             <div class="col text-center">
                 <h1>Lista de Empleados</h1>
@@ -183,17 +184,17 @@
                         <td>{{ $empleado->municipio->municipio }}</td>
                         <td>
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles">
-                                <a class="btn btn-info" href="" data-bs-toggle="modal"
-                                    data-bs-target="#detallesModal" data-empleado="{{ $empleado }}">
+                                <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detallesModal"
+                                    data-empleado="{{ $empleado }}">
                                     <i class="bi bi-eye-fill"></i></a></span>
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
                                 onclick="modificar({{ $empleado }})">
-                                <a class="btn btn-warning" href="" data-bs-toggle="modal"
-                                    data-bs-target="#modificarModal" data-empleado="{{ $empleado }}">
+                                <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
+                                    data-empleado="{{ $empleado }}">
                                     <i class="bi bi-person-fill-gear"></i></a></span>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar">
-                                <a class="btn btn-danger" href="" data-bs-toggle="modal"
-                                    data-bs-target="#borrarModal" data-empleado="{{ $empleado }}">
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
+                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
+                                    data-empleado="{{ $empleado }}">
                                     <i class="bi bi-trash-fill"></i></a></span>
                         </td>
                     </tr>
@@ -232,55 +233,13 @@
 
     <!-- Modal -->
 
-    <!-- Modal borrar empleado -->
-
-    <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="borrarModalLabel"><b>Confirmar baja de empleado </b></h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>¿Estás seguro que deseas dar de baja a este empleado?</p>
-                    <table class="table">
-                        <tr>
-                            <th scope="row" class="bg-dark text-light">NIF</th>
-                            <td class="bg-light"><span id="borrar-nif"></span></td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="bg-dark text-light">Nombre y apellidos</th>
-                            <td><span id="borrar-nombre"></span></td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="bg-dark text-light">Cargo</th>
-                            <td><span id="borrar-cargo"></span></td>
-                        </tr>
-                        <tr>
-                            <th scope="row" class="bg-dark text-light">Fecha de nacimiento</th>
-                            <td><span id="borrar-fecha_nacimiento"></span></td>
-                        </tr>
-                    </table>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form method="POST" id="borrar-empleado-form" action="">
-                        @csrf
-                        @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Dar de baja</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <!-- Modal detalles empleado -->
 
     <div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="detallesModalLabel"><b>Detalles del empleado </b></h5>
+                    <h5 class="modal-title" id="detallesModalLabel"><b>Detalles del empleado</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -332,7 +291,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="añadirModalLabel"><b>Añdir empleado</b></h5>
+                    <h5 class="modal-title" id="añadirModalLabel"><b>Dar de alta un empleado</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -645,6 +604,48 @@
                     <button class="btn btn-primary" type="submit">Modificar</button>
                 </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal borrar empleado -->
+
+    <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrarModalLabel"><b>Confirmar baja de empleado </b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas dar de baja a este empleado?</p>
+                    <table class="table">
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">NIF</th>
+                            <td class="bg-light"><span id="borrar-nif"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Nombre y apellidos</th>
+                            <td><span id="borrar-nombre"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Cargo</th>
+                            <td><span id="borrar-cargo"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Fecha de nacimiento</th>
+                            <td><span id="borrar-fecha_nacimiento"></span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="POST" id="borrar-empleado-form" action="">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Dar de baja</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
