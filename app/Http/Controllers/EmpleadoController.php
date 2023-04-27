@@ -3,8 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\Models\Empleado;
+use App\Models\Servicio;
 use App\Models\Municipio;
 use App\Models\Provincia;
+use App\Models\Servicio_Empleado;
 use App\Rules\DniRule;
 use Illuminate\Support\Facades\Auth;
 
@@ -69,5 +71,90 @@ class EmpleadoController extends Controller
         $empleado->delete();
         session()->flash('message', "$empleadoDatos->nombre $empleadoDatos->apellidos ha sido dado de baja correctamente.");
         return redirect()->route('listarEmpleados');
+    }
+
+    public function servicios($id)
+    {
+
+        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
+
+        if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
+            session()->flash('error', 'No tienes permiso sobre ese empleado.');
+            return redirect()->route('listarEmpleados');
+        }
+
+        $allservicios = Servicio::where('id_empresa', Auth::user()->empresa_id)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $servicios = Servicio_Empleado::where('id_empleado', $id)
+            ->whereHas('empleado', function ($query) {
+                $query->where('id_empresa', Auth::user()->empresa_id);
+            })
+            ->whereHas('servicio', function ($query) {
+                $query->whereNull('deleted_at');
+            })
+            ->with('servicio')
+            ->paginate(5);
+
+        return view('empleado.servicios', ['servicios' => $servicios, 'empleado' => $empleadoDatos, 'allservicios' => $allservicios]);
+    }
+
+    public function asociarServicio($id)
+    {
+        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
+
+        if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
+            session()->flash('error', 'No tienes permisos sobre ese empleado.');
+            return redirect()->route('listarEmpleados');
+        }
+
+        $datos = request()->validate([
+            'servicio_id' => 'required',
+        ]);
+
+        // Comprobar si ya existe la asociación
+        $servicioEmpleadoExistente = Servicio_Empleado::where('id_empleado', $id)
+            ->where('id_servicio', $datos['servicio_id'])
+            ->exists();
+
+        if ($servicioEmpleadoExistente) {
+            session()->flash('error', 'La asociación entre este empleado y el servicio ya existe.');
+            return redirect()->back();
+        }
+
+        $servicioEmpleado = Servicio_Empleado::create([
+            'id_empleado' => $id,
+            'id_servicio' => $datos['servicio_id'],
+        ]);
+
+        return redirect()->route('serviciosEmpleado', $id);
+    }
+
+    public function desasociarServicio($id)
+    {
+
+        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
+
+        if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
+            session()->flash('error', 'No tienes permisos sobre ese empleado.');
+            return redirect()->route('listarEmpleados');
+        }
+
+        $datos = request()->validate([
+            'servicio_id' => 'required',
+        ]);
+
+        $servicioEmpleado = Servicio_Empleado::where('id_empleado', $id)
+            ->where('id_servicio', $datos['servicio_id']);
+
+        if ($servicioEmpleado) {
+            $servicioEmpleado->delete();
+            session()->flash('success', 'La asociación ha sido eliminada con éxito.');
+        } else {
+            session()->flash('error', 'No se encontró la asociación especificada.');
+        }
+
+        return redirect()->route('serviciosEmpleado', $id);
     }
 }

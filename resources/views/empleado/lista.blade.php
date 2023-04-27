@@ -170,6 +170,7 @@
                     <th scope="col">Cargo</th>
                     <th scope="col">Provincia</th>
                     <th scope="col">Municipio</th>
+                    <th scope="col">Servicios</th>
                     <th scope="col">Opciones</th>
                 </tr>
             </thead>
@@ -183,7 +184,13 @@
                         <td>{{ $empleado->provincia->provincia }}</td>
                         <td>{{ $empleado->municipio->municipio }}</td>
                         <td>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Ver detalles">
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Servicios">
+                                <a class="btn btn-dark"
+                                    href="{{ route('serviciosEmpleado', ['id' => $empleado->id_empleado]) }}">
+                                    <i class="bi bi-bag-fill"></i></a></span>
+                        </td>
+                        <td>
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Detalles">
                                 <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detallesModal"
                                     data-empleado="{{ $empleado }}">
                                     <i class="bi bi-eye-fill"></i></a></span>

@@ -57,6 +57,12 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/modificarEmpleado/{id}', [EmpleadoController::class, 'modificar'])->name('modificarEmpleado');
         //Borrar un empleado
         Route::delete('/borrarEmpleado/{id}', [EmpleadoController::class, 'borrar'])->name('borrarEmpleado');
+        //Servicios que presta un empleado
+        Route::get('/serviciosEmpleado/{id}', [EmpleadoController::class, 'servicios'])->name('serviciosEmpleado');
+        //Asociar servicios a un empleado
+        Route::post('/asociarServicio/{id}', [EmpleadoController::class, 'asociarServicio'])->name('asociarServicio');
+        //Eliminar una asociacion-servicios de un empleado
+        Route::delete('/desasociarServicio/{id}', [EmpleadoController::class, 'desasociarServicio'])->name('desasociarServicio');
 
         // --- Servicios
 

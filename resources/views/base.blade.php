@@ -6,6 +6,8 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
+    <link rel="icon" href="{{ asset('img/icono.png') }}" type="image/x-icon">
+
     <title>@yield('title')</title>
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"

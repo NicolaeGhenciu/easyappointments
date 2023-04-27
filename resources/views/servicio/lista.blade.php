@@ -135,7 +135,7 @@
                                 onclick="modificar({{ $servicio }})">
                                 <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
                                     data-servicio="{{ $servicio }}">
-                                    <i class="bi bi-person-fill-gear"></i></a></span>
+                                    <i class="bi bi-gear-fill"></i></a></span>
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
                                 <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
                                     data-servicio="{{ $servicio }}">
