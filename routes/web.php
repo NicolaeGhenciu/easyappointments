@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\CitasController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ServicioController;
@@ -74,5 +75,16 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/modificarServicio/{id}', [ServicioController::class, 'modificar'])->name('modificarServicio');
         //Borrar un servicio
         Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
+
+        // --- Citas
+
+    });
+
+    //Rol Empelado
+    Route::middleware(['empleado'])->group(function () {
+        
+        // --- Citas
+        //Ver la agenda mensual, semanal y diaria del empleado
+        Route::get('/agendaEmpleado', [CitasController::class, 'agendaEmpleado'])->name('agendaEmpleado');
     });
 });

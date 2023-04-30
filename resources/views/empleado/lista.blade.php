@@ -38,8 +38,8 @@
                 $('#borrar-cargo').text(empleado.cargo);
                 $('#borrar-fecha_nacimiento').text(obtenerFechaFormateada(empleado.fecha_nacimiento));
                 $('#borrar-empleado-form').submit(function() {
-                    var url = "{{ route('borrarEmpleado', ['id' => '0']) }}";
-                    url = url.replace('0', empleado.id_empleado);
+                    var url = "{{ route('borrarEmpleado', ['id' => ':idempleado']) }}";
+                    url = url.replace(':idempleado', empleado.id_empleado);
                     $('#borrar-empleado-form').attr('action', url);
                 });
             });
@@ -84,8 +84,8 @@
             $("#provincia_id_mod").val(empleado.provincia_id);
             $("#municipio_id_mod").val(empleado.municipio_id);
             $('#modificar-empleado-form').submit(function() {
-                var url = "{{ route('modificarEmpleado', ['id' => '0']) }}";
-                url = url.replace('0', empleado.id_empleado);
+                var url = "{{ route('modificarEmpleado', ['id' => ':idempleado']) }}";
+                url = url.replace(':idempleado', empleado.id_empleado);
                 $('#modificar-empleado-form').attr('action', url);
             });
         }

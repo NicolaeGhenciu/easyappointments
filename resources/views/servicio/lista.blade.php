@@ -39,8 +39,11 @@
                 $('#borrar-descripcion').text(servicio.descripcion);
                 $('#borrar-precio').text(servicio.precio);
                 $('#borrar-servicio-form').submit(function() {
-                    var url = "{{ route('borrarServicio', ['id' => '0']) }}";
-                    url = url.replace('0', servicio.id_servicio);
+                    // event.preventDefault();
+                    //var url = "{{ route('borrarServicio', ['id' => '0']) }}";
+                    var url = "{{ route('borrarServicio', ['id' => ':idservicio']) }}";
+                    //url = url.replace(/:idservicio/g, servicio.id_servicio);
+                    url = url.replace(':idservicio', servicio.id_servicio);
                     $('#borrar-servicio-form').attr('action', url);
                 });
             });
@@ -55,8 +58,8 @@
             $("#descripcion_mod").val(servicio.descripcion);
             $("#precio_mod").val(servicio.precio);
             $('#modificar-servicio-form').submit(function() {
-                var url = "{{ route('modificarServicio', ['id' => '0']) }}";
-                url = url.replace('0', servicio.id_servicio);
+                var url = "{{ route('modificarServicio', ['id' => 'idservicio']) }}";
+                url = url.replace('idservicio', servicio.id_servicio);
                 $('#modificar-servicio-form').attr('action', url);
             });
         }

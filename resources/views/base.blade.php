@@ -147,7 +147,7 @@
                                 aria-current="page" href="{{ route('easyappointments') }}" aria-current="page"
                                 href="{{ route('easyappointments') }}">
                                 <i class="bi bi-house-fill"></i>
-                                <span class="ml-2">Home</span>
+                                <span class="ml-2">Noticias</span>
                             </a>
                         </li>
                         @if (Auth::check() && Auth::user()->role == 'empresa')
@@ -164,6 +164,16 @@
                                     href="{{ route('listarServicios') }}">
                                     <i class="bi bi-bag-fill"></i>
                                     <span class="ml-2">Gestionar Servicios</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
+                                    href="{{ route('agendaEmpleado') }}">
+                                    <i class="bi bi-calendar-week-fill"></i>
+                                    <span class="ml-2">Agenda</span>
                                 </a>
                             </li>
                         @endif
