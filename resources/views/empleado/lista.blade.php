@@ -23,6 +23,22 @@
         th {
             text-align: center;
         }
+
+        @media screen and (max-width: 767px) {
+
+            #tabla-empleados td:nth-child(1),
+            #tabla-empleados th:nth-child(1),
+            #tabla-empleados td:nth-child(3),
+            #tabla-empleados th:nth-child(3),
+            #tabla-empleados td:nth-child(4),
+            #tabla-empleados th:nth-child(4),
+            #tabla-empleados td:nth-child(5),
+            #tabla-empleados th:nth-child(5),
+            #tabla-empleados td:nth-child(6),
+            #tabla-empleados th:nth-child(6) {
+                display: none;
+            }
+        }
     </style>
 
     <script>
@@ -165,7 +181,7 @@
         </div>
     @endif
 
-    <div class="table-responsive">
+    <div class="table-responsive" id="tabla-empleados">
         <table class="table table-striped">
             <thead class="table-dark">
                 <tr>
@@ -195,24 +211,26 @@
                                     <i class="bi bi-bag-fill"></i></a></span>
                         </td>
                         <td>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Detalles">
-                                <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detallesModal"
-                                    data-empleado="{{ $empleado }}">
-                                    <i class="bi bi-eye-fill"></i></a></span>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
-                                onclick="modificar({{ $empleado }})">
-                                <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
-                                    data-empleado="{{ $empleado }}">
-                                    <i class="bi bi-person-fill-gear"></i></a></span>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
-                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
-                                    data-empleado="{{ $empleado }}">
-                                    <i class="bi bi-trash-fill"></i></a></span>
+                            <div class="btn-group btn-group-md gap-1">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Detalles">
+                                    <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#detallesModal"
+                                        data-empleado="{{ $empleado }}">
+                                        <i class="bi bi-eye-fill"></i></a></span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
+                                    onclick="modificar({{ $empleado }})">
+                                    <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
+                                        data-empleado="{{ $empleado }}">
+                                        <i class="bi bi-person-fill-gear"></i></a></span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
+                                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
+                                        data-empleado="{{ $empleado }}">
+                                        <i class="bi bi-trash-fill"></i></a></span>
                         </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
+    </div>
+    </tr>
+    @endforeach
+    </tbody>
+    </table>
     </div>
 
     <div id="centrar">

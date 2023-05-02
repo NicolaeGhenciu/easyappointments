@@ -24,6 +24,14 @@
         th {
             text-align: center;
         }
+
+        @media screen and (max-width: 767px) {
+
+            #tabla-servicios td:nth-child(3),
+            #tabla-servicios th:nth-child(3) {
+                display: none;
+            }
+        }
     </style>
 
     <script>
@@ -120,7 +128,7 @@
         </div>
     @endif
 
-    <div class="table-responsive">
+    <div class="table-responsive" id="tabla-servicios">
         <table class="table table-striped">
             <thead class="table-dark">
                 <tr>
@@ -139,15 +147,17 @@
                         <td>{{ $servicio->descripcion }}</td>
                         <td>{{ $servicio->precio }} €</td>
                         <td>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
-                                onclick="modificar({{ $servicio }})">
-                                <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
-                                    data-servicio="{{ $servicio }}">
-                                    <i class="bi bi-gear-fill"></i></a></span>
-                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
-                                <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
-                                    data-servicio="{{ $servicio }}">
-                                    <i class="bi bi-trash-fill"></i></a></span>
+                            <div class="btn-group btn-group-md gap-1">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
+                                    onclick="modificar({{ $servicio }})">
+                                    <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
+                                        data-servicio="{{ $servicio }}">
+                                        <i class="bi bi-gear-fill"></i></a></span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Dar de baja">
+                                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
+                                        data-servicio="{{ $servicio }}">
+                                        <i class="bi bi-trash-fill"></i></a></span>
+                            </div>
                         </td>
                     </tr>
                 @endforeach
