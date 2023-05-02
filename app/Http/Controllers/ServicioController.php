@@ -23,12 +23,22 @@ class ServicioController extends Controller
 
         session()->flash('crear');
 
+        $cod = request()->input('cod');
+
+        // Verificar si el código ya existe en la base de datos para esta empresa
+        if (Servicio::where('cod', $cod)
+            ->where('id_empresa', Auth::user()->empresa_id)
+            ->exists()
+        ) {
+            return back()->withErrors(['cod' => 'El código ya esta asociado a un servicio.']);
+        }
+
         $datos = request()->validate([
             'id_empresa' => '',
             'cod' => 'required|min:3|max:100',
             'nombre' => 'required|min:3|max:100',
             'descripcion' => 'required|min:3|max:100',
-            'precio' => 'required',
+            'precio' => 'required|numeric',
         ]);
 
         $datos['id_empresa'] = Auth::user()->empresa_id;
@@ -54,12 +64,24 @@ class ServicioController extends Controller
 
         session()->flash('modificar');
 
+        session(['id_servicio' => $sercicioDatos->id_servicio]);
+
+        $cod = request()->input('cod');
+
+        if (Servicio::where('cod', $cod)
+            ->where('id_empresa', Auth::user()->empresa_id)
+            ->where('id_servicio', '!=', $id)
+            ->exists()
+        ) {
+            return back()->withErrors(['cod' => 'El código ya está asociado a otro servicio.']);
+        }
+
         $datos = request()->validate([
             'id_empresa' => '',
             'cod' => 'required|min:3|max:100',
             'nombre' => 'required|min:3|max:100',
             'descripcion' => 'required|min:3|max:100',
-            'precio' => 'required',
+            'precio' => 'required|numeric',
         ]);
 
         $servicio->update($datos);

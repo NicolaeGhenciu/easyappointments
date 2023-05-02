@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Login</title>
+    <title>Iniciar sesión</title>
 
     <script src={{ asset('js/login.js') }}></script>
 
@@ -88,6 +88,12 @@
 
                 <hr>
 
+                @if (session()->has('error'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('error') }}
+                    </div>
+                @endif
+
                 @if (session()->has('message'))
                     <div class="alert alert-success">
                         {{ session()->get('message') }}
@@ -96,8 +102,9 @@
 
                 <div class="mb-3">
                     <label class="form-label">Email:</label>
-                    <input type="email" class="form-control border border-primary" name="email">
-                    @if ($errors->has('email'))
+                    <input type="email" class="form-control border border-primary" name="email"
+                        @if (old('email') && session()->get('login')) value="{{ old('email') }}" @endif>
+                    @if ($errors->has('email') && session()->get('login'))
                         <div class="alert alert-danger mt-1">
                             {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                         </div>
@@ -107,12 +114,11 @@
                 <div class="mb-3">
                     <label class="form-label">Contraseña: </label>
                     <input type="password" class="form-control border border-primary" name="password">
-                    @if ($errors->has('password'))
+                    @if ($errors->has('password') && session()->get('login'))
                         <div class="alert alert-danger mt-1">
                             {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                         </div>
                     @endif
-
                 </div>
 
                 <p class="small"><a class="text-primary" href=""></a></p>
@@ -156,7 +162,7 @@
                             <label class="form-label">Nombre:</label>
                             <input type="text" class="form-control border border-primary" name="nombre"
                                 value="{{ old('nombre') }}">
-                            @if ($errors->has('nombre'))
+                            @if ($errors->has('nombre') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -167,7 +173,7 @@
                             <label class="form-label">Apellidos:</label>
                             <input type="text" class="form-control border border-primary" name="apellidos"
                                 value="{{ old('apellidos') }}">
-                            @if ($errors->has('apellidos'))
+                            @if ($errors->has('apellidos') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('apellidos', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -180,7 +186,7 @@
                             <label class="form-label">Fecha de nacimiento:</label>
                             <input type="date" class="form-control border border-primary" name="fecha_nacimiento"
                                 value="{{ old('fecha_nacimiento') }}">
-                            @if ($errors->has('fecha_nacimiento'))
+                            @if ($errors->has('fecha_nacimiento') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -191,7 +197,7 @@
                             <label class="form-label">NIF:</label>
                             <input type="text" class="form-control border border-primary" name="nif"
                                 value="{{ old('nif') }}">
-                            @if ($errors->has('nif'))
+                            @if ($errors->has('nif') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('nif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -205,7 +211,7 @@
                             <label class="form-label">Email:</label>
                             <input type="email" class="form-control border border-primary" name="email"
                                 value="{{ old('email') }}">
-                            @if ($errors->has('email'))
+                            @if ($errors->has('email') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -216,7 +222,7 @@
                             <label class="form-label">Contraseña: </label>
                             <input type="password" class="form-control border border-primary" name="password"
                                 value="{{ old('password') }}">
-                            @if ($errors->has('password'))
+                            @if ($errors->has('password') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -231,7 +237,7 @@
                             <label class="form-label">Dirección:</label>
                             <input type="text" class="form-control border border-primary" name="direccion"
                                 value="{{ old('direccion') }}">
-                            @if ($errors->has('direccion'))
+                            @if ($errors->has('direccion') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -242,7 +248,7 @@
                             <label class="form-label">Teléfono:</label>
                             <input type="number" class="form-control border border-primary" name="telefono"
                                 value="{{ old('telefono') }}">
-                            @if ($errors->has('telefono'))
+                            @if ($errors->has('telefono') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -259,12 +265,11 @@
                                 onchange="getMunicipios(this.value, '#municipio_id')">
                                 <option value="" disabled selected>Seleccione una provincia</option>
                                 @foreach ($provincias as $provincia)
-                                    <option value="{{ $provincia->id }}"
-                                        {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
+                                    <option value="{{ $provincia->id }}">
                                         {{ $provincia->provincia }}</option>
                                 @endforeach
                             </select>
-                            @if ($errors->has('provincia_id'))
+                            @if ($errors->has('provincia_id') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -275,7 +280,7 @@
                             <label for="municipio_id" class="form-label">Municipio:</label>
                             <select class="form-select" name="municipio_id" id="municipio_id" disabled>
                             </select>
-                            @if ($errors->has('municipio_id'))
+                            @if ($errors->has('municipio_id') && session()->get('cliente'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -310,7 +315,7 @@
                             <label class="form-label">Razón social:</label>
                             <input type="text" class="form-control border border-primary" name="nombre"
                                 value="{{ old('nombre') }}">
-                            @if ($errors->has('nombre'))
+                            @if ($errors->has('nombre') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -321,7 +326,7 @@
                             <label class="form-label">CIF:</label>
                             <input type="text" class="form-control border border-primary" name="cif"
                                 value="{{ old('cif') }}">
-                            @if ($errors->has('cif'))
+                            @if ($errors->has('cif') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('cif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -335,7 +340,7 @@
                             <label class="form-label">Email:</label>
                             <input type="email" class="form-control border border-primary" name="email"
                                 value="{{ old('email') }}">
-                            @if ($errors->has('email'))
+                            @if ($errors->has('email') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -346,7 +351,7 @@
                             <label for="exampleInputPassword1" class="form-label">Contraseña: </label>
                             <input type="password" class="form-control border border-primary" name="password"
                                 value="{{ old('password') }}">
-                            @if ($errors->has('password'))
+                            @if ($errors->has('password') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -361,7 +366,7 @@
                             <label class="form-label">Dirección:</label>
                             <input type="text" class="form-control border border-primary" name="direccion"
                                 value="{{ old('direccion') }}">
-                            @if ($errors->has('direccion'))
+                            @if ($errors->has('direccion') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -372,7 +377,7 @@
                             <label class="form-label">Teléfono:</label>
                             <input type="number" class="form-control border border-primary" name="telefono"
                                 value="{{ old('telefono') }}">
-                            @if ($errors->has('telefono'))
+                            @if ($errors->has('telefono') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -386,15 +391,14 @@
                         <div class="col">
                             <label for="provincia_id" class="form-label">Provincia:</label>
                             <select class="form-select" name="provincia_id" id="provincia_id"
-                                onchange="getMunicipios(this.value, '#municipio_id')">
+                                onchange="getMunicipios(this.value, '#municipio_id_e')">
                                 <option value="" disabled selected>Seleccione una provincia</option>
                                 @foreach ($provincias as $provincia)
-                                    <option value="{{ $provincia->id }}"
-                                        {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
+                                    <option value="{{ $provincia->id }}">
                                         {{ $provincia->provincia }}</option>
                                 @endforeach
                             </select>
-                            @if ($errors->has('provincia_id'))
+                            @if ($errors->has('provincia_id') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
                                     {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
@@ -402,12 +406,12 @@
                         </div>
 
                         <div class="col">
-                            <label for="municipio_id" class="form-label">Municipio:</label>
-                            <select class="form-select" name="municipio_id" id="municipio_id" disabled>
+                            <label for="municipio_id_e" class="form-label">Municipio:</label>
+                            <select class="form-select" name="municipio_id_e" id="municipio_id_e" disabled>
                             </select>
-                            @if ($errors->has('municipio_id'))
+                            @if ($errors->has('municipio_id_e') && session()->get('empresa'))
                                 <div class="alert alert-danger mt-1">
-                                    {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    {!! $errors->first('municipio_id_e', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                 </div>
                             @endif
                         </div>

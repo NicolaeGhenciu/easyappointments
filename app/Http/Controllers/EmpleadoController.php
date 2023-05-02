@@ -7,6 +7,7 @@ use App\Models\Servicio;
 use App\Models\Municipio;
 use App\Models\Provincia;
 use App\Models\Servicio_Empleado;
+use App\Models\User;
 use App\Rules\DniRule;
 use Illuminate\Support\Facades\Auth;
 
@@ -37,6 +38,8 @@ class EmpleadoController extends Controller
 
         session()->flash('modificar');
 
+        session(['id_empleado' => $empleadoDatos->id_empleado]);
+
         $datos = request()->validate([
             'nif' => ['required', new DniRule],
             'nombre' => 'required|min:3|max:100',
@@ -50,6 +53,15 @@ class EmpleadoController extends Controller
         ]);
 
         $empleado->update($datos);
+
+        $user = User::where('empleado_id', $empleadoDatos->id_empleado)->first();
+
+        if ($user) {
+
+            $user->nombre = $datos['nombre'] . ' ' . $datos['apellidos'];
+
+            $user->save();
+        }
 
         session()->forget('modificar');
 

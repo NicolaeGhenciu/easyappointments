@@ -18,12 +18,16 @@ class AuthController extends Controller
 
     public function login(Request $request)
     {
+
+        session()->flash('login');
+
         $credentials = $request->validate([
             'email' => ['required', 'email'],
             'password' => ['required'],
         ]);
 
         if (Auth::attempt($credentials)) {
+            session()->forget('login');
             return redirect()->intended('/easyappointments');
         }
 

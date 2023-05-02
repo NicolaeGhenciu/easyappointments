@@ -112,7 +112,7 @@
 
     <!-- Si existe una sesion de crear mostramos el modal nada mas cargar la pagina -->
 
-    @if (session()->get('crear'))
+    @if (session()->get('crear') && !session()->has('error'))
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
@@ -126,6 +126,11 @@
         <script>
             $(document).ready(function() {
                 $('#modificarModal').modal('show');
+                $('#modificar-empleado-form').submit(function() {
+                    var url = "{{ route('modificarEmpleado', ['id' => ':idempleado']) }}";
+                    url = url.replace(':idempleado', {{ old('id_empleado', session('id_empleado')) }});
+                    $('#modificar-empleado-form').attr('action', url);
+                });
             });
         </script>
     @endif
@@ -428,8 +433,7 @@
                                     onchange="getMunicipios(this.value, '#municipio_id')">
                                     <option value="" disabled selected>Seleccione una provincia</option>
                                     @foreach ($provincias as $provincia)
-                                        <option value="{{ $provincia->id }}"
-                                            @if (old('provincia_id') && session()->get('crear')) {{ old('provincia_id') == $provincia->id ? 'selected' : '' }} @endif>
+                                        <option value="{{ $provincia->id }}">
                                             {{ $provincia->provincia }}</option>
                                     @endforeach
                                 </select>

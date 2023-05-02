@@ -142,7 +142,7 @@
 
 @section('modals')
 
-    <!-- Modal añadir empleado -->
+    <!-- Modal asociar servicio -->
 
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">

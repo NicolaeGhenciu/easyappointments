@@ -6,6 +6,7 @@ use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -18,6 +19,17 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+
+// Route::get('/enviar-correo', function () {
+//     $email = 'nicoadrianx42x@gmail.com'; // Cambia esto por la dirección de correo electrónico de destino
+//     $subject = 'Correo electrónico de prueba';
+//     $body = 'Este es un correo electrónico de prueba enviado desde Laravel.';
+//     Mail::raw($body, function ($message) use ($email, $subject) {
+//         $message->from('empresa@gmail.com', 'Tu nombre');
+//         $message->to($email)->subject($subject);
+//     });
+//     return 'El correo electrónico de prueba se ha enviado correctamente.';
+// });
 
 //GET Login
 Route::get('/', [AuthController::class, 'showLoginForm'])->name('login');
@@ -82,7 +94,7 @@ Route::middleware(['auth'])->group(function () {
 
     //Rol Empelado
     Route::middleware(['empleado'])->group(function () {
-        
+
         // --- Citas
         //Ver la agenda mensual, semanal y diaria del empleado
         Route::get('/agendaEmpleado', [CitasController::class, 'agendaEmpleado'])->name('agendaEmpleado');

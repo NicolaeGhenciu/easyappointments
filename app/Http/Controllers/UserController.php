@@ -18,6 +18,8 @@ class UserController extends Controller
 
         $datos = request()->merge(['role' => 'empresa'])->all();
 
+        session()->flash('empresa');
+
         $datos = request()->validate([
             'nombre' => 'required|min:3|max:100',
             'cif' => ['required', new CifRules],
@@ -26,9 +28,17 @@ class UserController extends Controller
             'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
             'direccion' => 'required|min:6|max:100',
             'provincia_id' => 'required',
-            'municipio_id' => 'required',
+            'municipio_id_e' => 'required',
             'role' => '',
         ]);
+
+        $datos['municipio_id'] = $datos['municipio_id_e'];
+        unset($datos['municipio_id_e']);
+
+        if (emailExists($datos['email'])) {
+            session()->flash('error', 'El correo electrónico ya existe en nuestra base de datos.');
+            return back();
+        }
 
         $datos['password'] = Hash::make($datos['password']);
 
@@ -37,6 +47,8 @@ class UserController extends Controller
         $datos['empresa_id'] = $empresa->id;
 
         User::create($datos);
+
+        session()->forget('empresa');
 
         session()->flash('message', 'Empresa registrado correctamente.');
 
@@ -48,11 +60,13 @@ class UserController extends Controller
 
         $datos = request()->merge(['role' => 'cliente'])->all();
 
+        session()->flash('cliente');
+
         $datos = request()->validate([
             'nif' => ['required', new DniRule],
             'nombre' => 'required|min:3|max:100',
             'apellidos' => 'required|min:3|max:100',
-            'fecha_nacimiento' => 'required',
+            'fecha_nacimiento' => ['required', 'date', 'before: -16 years'],
             'email' => 'required|email',
             'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
             'direccion' => 'required|min:6|max:100',
@@ -62,6 +76,11 @@ class UserController extends Controller
             'role' => '',
         ]);
 
+        if (emailExists($datos['email'])) {
+            session()->flash('error', 'El correo electrónico ya existe en nuestra base de datos.');
+            return back();
+        }
+
         $datos['password'] = Hash::make($datos['password']);
 
         $cliente = Cliente::create($datos);
@@ -69,6 +88,8 @@ class UserController extends Controller
         $datos['cliente_id'] = $cliente->id;
 
         User::create($datos);
+
+        session()->forget('cliente');
 
         session()->flash('message', 'Cliente registrado correctamente.');
 
@@ -87,7 +108,7 @@ class UserController extends Controller
             'nombre' => 'required|min:3|max:100',
             'apellidos' => 'required|min:3|max:100',
             'cargo' => 'required|min:2|max:100',
-            'fecha_nacimiento' => 'required',
+            'fecha_nacimiento' => ['required', 'date', 'before: -18 years'],
             'email' => 'required|email',
             'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
             'direccion' => 'required|min:6|max:100',
@@ -96,6 +117,11 @@ class UserController extends Controller
             'municipio_id' => 'required',
             'role' => '',
         ]);
+
+        if (emailExists($datos['email'])) {
+            session()->flash('error', 'El correo electrónico ya existe en nuestra base de datos.');
+            return back();
+        }
 
         $datos['password'] = Hash::make($datos['password']);
 
@@ -113,4 +139,10 @@ class UserController extends Controller
 
         return back();
     }
+}
+
+function emailExists($email)
+{
+    $user = User::where('email', $email)->first();
+    return $user ? true : false;
 }

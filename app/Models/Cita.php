@@ -18,11 +18,31 @@ class Cita extends Model
     protected $fillable = [
         'id_cita',
         'id_cliente',
-        'id-empresa',
+        'id_empresa',
         'id_empleado',
         'id_servicio',
         'fecha_inicio',
         'fecha_fin',
         'status'
     ];
+
+    public function empresa()
+    {
+        return $this->belongsTo('App\Models\Empresa', 'id_empresa', 'id_empresa');
+    }
+
+    public function empleado()
+    {
+        return $this->belongsTo('App\Models\Empleado', 'id_empleado', 'id_empleado');
+    }
+
+    public function cliente()
+    {
+        return $this->belongsTo('App\Models\Cliente', 'id_cliente', 'id_cliente');
+    }
+
+    public function servicio()
+    {
+        return $this->belongsTo('App\Models\Servicio', 'id_servicio', 'id_servicio');
+    }
 }

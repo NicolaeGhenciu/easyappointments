@@ -81,6 +81,11 @@
         <script>
             $(document).ready(function() {
                 $('#modificarModal').modal('show');
+                $('#modificar-servicio-form').submit(function() {
+                    var url = "{{ route('modificarServicio', ['id' => 'idservicio']) }}";
+                    url = url.replace('idservicio', {{ old('id_servicio', session('id_servicio')) }});
+                    $('#modificar-servicio-form').attr('action', url);
+                });
             });
         </script>
     @endif

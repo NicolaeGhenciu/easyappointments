@@ -47,7 +47,8 @@
                         {
                             title: 'Cita #{{ $cita->id_cita }}',
                             start: '{{ $cita->fecha_inicio }}',
-                            end: '{{ $cita->fecha_fin }}'
+                            end: '{{ $cita->fecha_fin }}',
+                            //color: 'red',
                         },
                     @endforeach
                 ],
