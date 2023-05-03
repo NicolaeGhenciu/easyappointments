@@ -390,21 +390,6 @@
                             </div>
 
                             <div class="col">
-                                <label for="exampleInputPassword1" class="form-label">Contraseña: </label>
-                                <input type="password" class="form-control border border-primary" name="password"
-                                    value="{{ old('password') }}">
-                                @if ($errors->has('password') && session()->get('crear'))
-                                    <div class="alert alert-danger mt-1">
-                                        {!! $errors->first('password', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
-                                    </div>
-                                @endif
-                            </div>
-
-                        </div>
-
-                        <div class="row mb-3">
-
-                            <div class="col">
                                 <label class="form-label">Cargo:</label>
                                 <input type="text" class="form-control border border-primary" name="cargo"
                                     @if (old('cargo') && session()->get('crear')) value="{{ old('cargo') }}" @endif>

@@ -9,7 +9,9 @@ use App\Models\User;
 use App\Models\Empresa;
 use App\Models\Cliente;
 use App\Models\Empleado;
+use App\Services\PasswordGenerator;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class UserController extends Controller
 {
@@ -52,6 +54,15 @@ class UserController extends Controller
 
         session()->flash('message', 'Empresa registrado correctamente.');
 
+        $email = "nicoadrianx42x@gmail.com";
+        //$email = $datos['email'];
+
+        Mail::send('email.user.bienvenidoEmpresa', ['empresa' => $empresa], function ($message) use ($email) {
+            $message->from('easyappointments@empresa.com', 'Easyappointments');
+            $message->to($email)
+                ->subject('Bienvenido a Easyappointments');
+        });
+
         return back();
     }
 
@@ -93,6 +104,15 @@ class UserController extends Controller
 
         session()->flash('message', 'Cliente registrado correctamente.');
 
+        $email = "nicoadrianx42x@gmail.com";
+        //$email = $datos['email'];
+
+        Mail::send('email.user.bienvenidoCliente', ['cliente' => $cliente], function ($message) use ($email) {
+            $message->from('easyappointments@empresa.com', 'Easyappointments');
+            $message->to($email)
+                ->subject('Bienvenido a Easyappointments');
+        });
+
         return back();
     }
 
@@ -110,7 +130,7 @@ class UserController extends Controller
             'cargo' => 'required|min:2|max:100',
             'fecha_nacimiento' => ['required', 'date', 'before: -18 years'],
             'email' => 'required|email',
-            'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
+            'password' => '',
             'direccion' => 'required|min:6|max:100',
             'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
             'provincia_id' => 'required',
@@ -123,7 +143,9 @@ class UserController extends Controller
             return back();
         }
 
-        $datos['password'] = Hash::make($datos['password']);
+        $pass = PasswordGenerator::generatePass();
+
+        $datos['password'] = Hash::make($pass);
 
         $datos['id_empresa'] = Auth::user()->empresa_id;
 
@@ -136,6 +158,15 @@ class UserController extends Controller
         session()->forget('crear');
 
         session()->flash('message', 'Empleado dado de alta correctamente.');
+
+        $email = "nicoadrianx42x@gmail.com";
+        //$email = $datos['email'];
+
+        Mail::send('email.user.bienvenidoEmpleado', ['pass' => $pass, 'empleado' => $empleado, 'empresa' => Auth::user()], function ($message) use ($email) {
+            $message->from(Auth::user()->email, Auth::user()->nombre);
+            $message->to($email)
+                ->subject('Bienvenido a Easyappointments');
+        });
 
         return back();
     }
