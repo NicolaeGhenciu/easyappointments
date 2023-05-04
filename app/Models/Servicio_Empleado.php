@@ -14,6 +14,7 @@ class Servicio_Empleado extends Model
     protected $table = 'servicios_empleado';
 
     protected $fillable = [
+        'id_servicio_empleado',
         'id_empleado',
         'id_servicio',
     ];

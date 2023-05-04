@@ -145,21 +145,17 @@ class EmpleadoController extends Controller
 
     public function desasociarServicio($id)
     {
+        $servicioEmpleado = Servicio_Empleado::where('id_servicio_empleado', $id);
 
-        $empleadoDatos = Empleado::where('id_empleado', $id)->first();
+        $servicioEmpleadoDatos = Servicio_Empleado::where('id_servicio_empleado', $id)->first();
 
+        $empleadoDatos = Empleado::where('id_empleado', $servicioEmpleadoDatos->id_empleado)->first();
+        
         if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
             session()->flash('error', 'No tienes permisos sobre ese empleado.');
             return redirect()->route('listarEmpleados');
         }
-
-        $datos = request()->validate([
-            'servicio_id' => 'required',
-        ]);
-
-        $servicioEmpleado = Servicio_Empleado::where('id_empleado', $id)
-            ->where('id_servicio', $datos['servicio_id']);
-
+        
         if ($servicioEmpleado) {
             $servicioEmpleado->delete();
             session()->flash('success', 'La asociación ha sido eliminada con éxito.');
@@ -167,6 +163,6 @@ class EmpleadoController extends Controller
             session()->flash('error', 'No se encontró la asociación especificada.');
         }
 
-        return redirect()->route('serviciosEmpleado', $id);
+        return redirect()->route('serviciosEmpleado', $empleadoDatos->id_empleado);
     }
 }

@@ -51,11 +51,16 @@
             $('#borrarModal').on('show.bs.modal', function(event) {
                 var button = $(event.relatedTarget);
                 var servicio = button.data('servicio');
-                $('#borrar-id').val(servicio.id_servicio);
-                $('#borrar-cod').text(servicio.cod);
-                $('#borrar-nombre').text(servicio.nombre);
-                $('#borrar-descripcion').text(servicio.descripcion);
-                $('#borrar-precio').text(servicio.precio);
+                console.log(servicio);
+                $('#borrar-cod').text(servicio.servicio.cod);
+                $('#borrar-nombre').text(servicio.servicio.nombre);
+                $('#borrar-descripcion').text(servicio.servicio.descripcion);
+                $('#borrar-precio').text(servicio.servicio.precio);
+                $('#desasociar-form').submit(function() {
+                    var url = "{{ route('desasociarServicio', ['id' => ':idasociacion']) }}";
+                    url = url.replace(':idasociacion', servicio.id_servicio_empleado);
+                    $('#desasociar-form').attr('action', url);
+                });
             });
         });
     </script>
@@ -113,7 +118,7 @@
                             <div class="btn-group btn-group-md gap-1">
                                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar asociación">
                                     <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
-                                        data-servicio="{{ $servicio->servicio }}">
+                                        data-servicio="{{ $servicio }}">
                                         <i class="bi bi-trash-fill"></i></a></span>
                             </div>
                         </td>
@@ -248,11 +253,9 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <form method="POST" id="desasociar-form"
-                        action="{{ route('desasociarServicio', ['id' => $empleado->id_empleado]) }}">
+                    <form method="POST" id="desasociar-form" action="">
                         @csrf
                         @method('DELETE')
-                        <input type="text" id="borrar-id" name="servicio_id" value="" hidden>
                         <button type="submit" class="btn btn-danger">Borrar asociación</button>
                     </form>
                 </div>
