@@ -17,7 +17,7 @@
             var calendar = new FullCalendar.Calendar(calendarEl, {
 
                 headerToolbar: {
-                    left: 'prev,next today',
+                    left: 'prev,today,next',
                     center: 'title',
                     right: 'dayGridMonth,listDay,listWeek'
                 },
@@ -45,22 +45,37 @@
                 events: [
                     @foreach ($citas as $cita)
                         {
-                            title: 'Cita #{{ $cita->id_cita }}',
+                            title: '#{{ $cita->servicio->nombre }} {{ $cita->cliente->apellidos }}',
                             start: '{{ $cita->fecha_inicio }}',
                             end: '{{ $cita->fecha_fin }}',
-                            //color: 'red',
+                            extendedProps: {
+                                id: '{{ $cita->id_cita }}',
+                                status: '{{ $cita->status }}',
+                            },
+                            color: @if ($cita->status == 'confirmada')
+                                'green'
+                            @elseif ($cita->status == 'cancelada')
+                                'red'
+                            @else
+                                'gray'
+                            @endif ,
                         },
                     @endforeach
                 ],
 
                 eventClick: function(info) {
+
+                    // $('#detallesModal').on('show.bs.modal', function(event) {
+
+                    // });
+                    $('#detallesModal').modal('show');
                     // obtener la información de la cita
                     var title = info.event.title;
                     var start = info.event.start;
                     var end = info.event.end;
 
                     // mostrar un alert con la información de la cita
-                    alert('Cita: ' + title + '\nInicio: ' + start + '\nFin: ' + end);
+                    console.log(info.event.extendedProps)
                 }
 
             });
@@ -121,5 +136,30 @@
     @endif
 
     <div id='calendar'></div>
+
+@endsection
+
+
+@section('modals')
+
+    <!-- Modal -->
+
+    <div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="detallesModalLabel"><b>Confirmar baja de servicio </b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="submit" class="btn btn-danger">Aceptar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 @endsection
