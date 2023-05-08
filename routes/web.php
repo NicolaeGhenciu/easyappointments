@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CitasController;
+use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ServicioController;
@@ -58,6 +59,9 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/modificarEmpleado/{id}', [EmpleadoController::class, 'modificar'])->name('modificarEmpleado');
         //Borrar un empleado
         Route::delete('/borrarEmpleado/{id}', [EmpleadoController::class, 'borrar'])->name('borrarEmpleado');
+
+        // --- Asociación servicios-empleado
+
         //Servicios que presta un empleado
         Route::get('/serviciosEmpleado/{id}', [EmpleadoController::class, 'servicios'])->name('serviciosEmpleado');
         //Asociar servicios a un empleado
@@ -76,8 +80,13 @@ Route::middleware(['auth'])->group(function () {
         //Borrar un servicio
         Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
 
-        // --- Citas
+        // --- Clientes
 
+        //Listar
+        Route::get('/listarClientes', [ClienteController::class, 'listar'])->name('listarClientes');
+
+
+        // --- Citas
     });
 
     //Rol Empelado
