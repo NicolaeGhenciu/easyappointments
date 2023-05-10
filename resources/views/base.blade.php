@@ -177,6 +177,16 @@
                                 </a>
                             </li>
                         @endif
+                        @if ((Auth::check() && Auth::user()->role == 'empleado') || Auth::user()->role == 'empresa')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarClientes') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarClientes') }}" aria-current="page"
+                                    href="{{ route('listarClientes') }}">
+                                    <i class="bi bi-person-video2"></i></i>
+                                    <span class="ml-2">Gestionar Clientes</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </nav>

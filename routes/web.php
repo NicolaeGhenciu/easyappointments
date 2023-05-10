@@ -80,13 +80,21 @@ Route::middleware(['auth'])->group(function () {
         //Borrar un servicio
         Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
 
+        // --- Citas
+
+    });
+
+    Route::middleware(['empresa-empleado'])->group(function () {
+
         // --- Clientes
 
         //Listar
         Route::get('/listarClientes', [ClienteController::class, 'listar'])->name('listarClientes');
+        //Dar de alta un cliente
+
+        //Modificar un cliente
 
 
-        // --- Citas
     });
 
     //Rol Empelado
