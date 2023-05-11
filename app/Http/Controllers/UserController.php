@@ -66,8 +66,11 @@ class UserController extends Controller
         return back();
     }
 
-    public function crearUsuarioCliente()
+    public function crearUsuarioCliente($id = '')
     {
+        if($id){
+            dd("hola");
+        }
 
         $datos = request()->merge(['role' => 'cliente'])->all();
 

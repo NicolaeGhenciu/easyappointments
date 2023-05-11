@@ -201,4 +201,148 @@
         </div>
     </div>
 
+    <!-- Modal añadir cliente -->
+
+    <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="añadirModalLabel"><b>Dar de alta un cliente</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('crearUsuarioCliente', ['id' => Auth::user()->empresa_id]) }}" method="post">
+                        @csrf
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label class="form-label">Nombre:</label>
+                                <input type="text" class="form-control border border-primary" name="nombre"
+                                    @if (old('nombre') && session()->get('crear')) value="{{ old('nombre') }}" @endif>
+                                @if ($errors->has('nombre') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Apellidos:</label>
+                                <input type="text" class="form-control border border-primary" name="apellidos"
+                                    @if (old('apellidos') && session()->get('crear')) value="{{ old('apellidos') }}" @endif>
+                                @if ($errors->has('apellidos') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('apellidos', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Fecha de nacimiento:</label>
+                                <input type="date" class="form-control border border-primary" name="fecha_nacimiento"
+                                    @if (old('fecha_nacimiento') && session()->get('crear')) value="{{ old('fecha_nacimiento') }}" @endif>
+                                @if ($errors->has('fecha_nacimiento') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">NIF:</label>
+                                <input type="text" class="form-control border border-primary" name="nif"
+                                    @if (old('nif') && session()->get('crear')) value="{{ old('nif') }}" @endif>
+                                @if ($errors->has('nif') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('nif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-6">
+
+                            <div class="col">
+                                <label class="form-label">Email:</label>
+                                <input type="email" class="form-control border border-primary" name="email"
+                                    value="{{ old('email') }}">
+                                @if ($errors->has('email') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label class="form-label">Dirección:</label>
+                                <input type="text" class="form-control border border-primary" name="direccion"
+                                    @if (old('direccion') && session()->get('crear')) value="{{ old('direccion') }}" @endif>
+                                @if ($errors->has('direccion') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Teléfono:</label>
+                                <input type="number" class="form-control border border-primary" name="telefono"
+                                    @if (old('telefono') && session()->get('crear')) value="{{ old('telefono') }}" @endif>
+                                @if ($errors->has('telefono') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label for="provincia_id" class="form-label">Provincia:</label>
+                                <select class="form-select" name="provincia_id" id="provincia_id"
+                                    onchange="getMunicipios(this.value, '#municipio_id')">
+                                    <option value="" disabled selected>Seleccione una provincia</option>
+                                    @foreach ($provincias as $provincia)
+                                        <option value="{{ $provincia->id }}">
+                                            {{ $provincia->provincia }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('provincia_id') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label for="municipio_id" class="form-label">Municipio:</label>
+                                <select class="form-select" name="municipio_id" id="municipio_id" disabled>
+                                </select>
+                                @if ($errors->has('municipio_id') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" type="submit">Dar de alta</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
 @endsection

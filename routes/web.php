@@ -30,7 +30,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('crearUsuarioEmpresa', [UserController::class, 'crearUsuarioEmpresa'])->name('crearUsuarioEmpresa');
 
 // Dar de alta a un cliente
-Route::post('crearUsuarioCliente', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
+Route::post('crearUsuarioCliente/{id?}', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
 
 //Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -47,7 +47,7 @@ Route::middleware(['auth'])->group(function () {
     })->name('easyappointments');
 
     //Rol Empresa
-    Route::middleware(['empresa'])->group(function () {
+    Route::middleware(['checkRole:empresa'])->group(function () {
 
         // --- Empleado
 
@@ -84,7 +84,7 @@ Route::middleware(['auth'])->group(function () {
 
     });
 
-    Route::middleware(['empresa-empleado'])->group(function () {
+    Route::middleware(['checkRole:empresa,empleado'])->group(function () {
 
         // --- Clientes
 
@@ -98,7 +98,7 @@ Route::middleware(['auth'])->group(function () {
     });
 
     //Rol Empelado
-    Route::middleware(['empleado'])->group(function () {
+    Route::middleware(['checkRole:empleado'])->group(function () {
 
         // --- Citas
         //Ver la agenda mensual, semanal y diaria del empleado

@@ -20,7 +20,7 @@ class ClienteController extends Controller
         if (Auth::user()->role == 'empresa') {
             $clientes = Cliente::whereIn('id_cliente', function ($query) {
                 $query->select('id_cliente')
-                    ->from('citas')
+                    ->from('empresa_cliente')
                     ->where('id_empresa', Auth::user()->empresa_id);
             })->get();
         }
