@@ -96,7 +96,6 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/modificarCliente/{id}', [ClienteController::class, 'modificar'])->name('modificarCliente');
         //Desasociar un cliente
         Route::delete('/desasociarCliente/{id}', [ClienteController::class, 'borrar'])->name('desasociarCliente');
-
     });
 
     //Rol Empelado

@@ -138,7 +138,7 @@ class ClienteController extends Controller
         session()->forget('modificar');
 
         session()->flash('message', "Los datos de " . $datos['nombre'] . " " . $datos['apellidos'] . "han sido modificado correctamente.");
-        
+
         return redirect()->route('listarClientes');
     }
 }
