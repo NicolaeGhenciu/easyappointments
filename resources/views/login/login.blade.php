@@ -134,6 +134,29 @@
                     <a class="btn btn-info mt-1" onclick="showRegisterForm()">¿No tienes
                         cuenta? <i class="bi bi-person-fill-add"></i></a>
                 </div>
+                <br>
+                <div class="container">
+                    <table class="table text-center">
+                        <tbody>
+                            <tr>
+                                <th scope="row">Empresa</th>
+                                <td>angelica@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Empleado</th>
+                                <td>juan@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Cliente</th>
+                                <td>rosa@gmail.com</td>
+                            </tr>
+                            <tr>
+                                <th scope="row">Contraseña</th>
+                                <td>123456</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
 
             </form>
 
@@ -143,7 +166,8 @@
                 <div class="d-flex justify-content-center">
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                         <button type="button" class="btn btn-primary" onclick="showRegisterCliente()">Cliente</button>
-                        <button type="button" class="btn btn-warning" onclick="showRegisterEmpresa()">Empresa</button>
+                        <button type="button" class="btn btn-warning"
+                            onclick="showRegisterEmpresa()">Empresa</button>
                     </div>
                 </div>
             </div>
@@ -429,6 +453,7 @@
                 </div>
 
             </div>
+
         </div>
     </div>
 </body>

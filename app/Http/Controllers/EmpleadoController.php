@@ -150,12 +150,12 @@ class EmpleadoController extends Controller
         $servicioEmpleadoDatos = Servicio_Empleado::where('id_servicio_empleado', $id)->first();
 
         $empleadoDatos = Empleado::where('id_empleado', $servicioEmpleadoDatos->id_empleado)->first();
-        
+
         if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
             session()->flash('error', 'No tienes permisos sobre ese empleado.');
             return redirect()->route('listarEmpleados');
         }
-        
+
         if ($servicioEmpleado) {
             $servicioEmpleado->delete();
             session()->flash('success', 'La asociación ha sido eliminada con éxito.');

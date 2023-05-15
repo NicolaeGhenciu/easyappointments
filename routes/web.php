@@ -30,7 +30,7 @@ Route::post('/login', [AuthController::class, 'login'])->name('login');
 Route::post('crearUsuarioEmpresa', [UserController::class, 'crearUsuarioEmpresa'])->name('crearUsuarioEmpresa');
 
 // Dar de alta a un cliente
-Route::post('crearUsuarioCliente/{id?}', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
+Route::post('crearUsuarioCliente', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
 
 //Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
@@ -91,9 +91,11 @@ Route::middleware(['auth'])->group(function () {
         //Listar
         Route::get('/listarClientes', [ClienteController::class, 'listar'])->name('listarClientes');
         //Dar de alta un cliente
-
+        Route::post('/asociarCliente', [ClienteController::class, 'asociar'])->name('asociarCliente');
         //Modificar un cliente
-
+        Route::put('/modificarCliente/{id}', [ClienteController::class, 'modificar'])->name('modificarCliente');
+        //Desasociar un cliente
+        Route::delete('/desasociarCliente/{id}', [ClienteController::class, 'borrar'])->name('desasociarCliente');
 
     });
 

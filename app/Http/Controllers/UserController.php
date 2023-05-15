@@ -9,6 +9,7 @@ use App\Models\User;
 use App\Models\Empresa;
 use App\Models\Cliente;
 use App\Models\Empleado;
+use App\Models\Empresa_Cliente;
 use App\Services\PasswordGenerator;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Mail;
@@ -66,36 +67,56 @@ class UserController extends Controller
         return back();
     }
 
-    public function crearUsuarioCliente($id = '')
+    public function crearUsuarioCliente()
     {
-        if($id){
-            dd("hola");
-        }
 
         $datos = request()->merge(['role' => 'cliente'])->all();
 
         session()->flash('cliente');
 
-        $datos = request()->validate([
-            'nif' => ['required', new DniRule],
-            'nombre' => 'required|min:3|max:100',
-            'apellidos' => 'required|min:3|max:100',
-            'fecha_nacimiento' => ['required', 'date', 'before: -16 years'],
-            'email' => 'required|email',
-            'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
-            'direccion' => 'required|min:6|max:100',
-            'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
-            'provincia_id' => 'required',
-            'municipio_id' => 'required',
-            'role' => '',
-        ]);
+        session()->flash('crear');
 
         if (emailExists($datos['email'])) {
             session()->flash('error', 'El correo electrónico ya existe en nuestra base de datos.');
             return back();
         }
 
-        $datos['password'] = Hash::make($datos['password']);
+        if (Auth::check()) {
+
+            $datos = request()->validate([
+                'nif' => ['required', new DniRule],
+                'nombre' => 'required|min:3|max:100',
+                'apellidos' => 'required|min:3|max:100',
+                'fecha_nacimiento' => ['required', 'date', 'before: -16 years'],
+                'email' => 'required|email',
+                'password' => '',
+                'direccion' => 'required|min:6|max:100',
+                'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
+                'provincia_id' => 'required',
+                'municipio_id' => 'required',
+                'role' => '',
+            ]);
+
+            $pass = PasswordGenerator::generatePass();
+            $datos['password'] = Hash::make($pass);
+        } else {
+
+            $datos = request()->validate([
+                'nif' => ['required', new DniRule],
+                'nombre' => 'required|min:3|max:100',
+                'apellidos' => 'required|min:3|max:100',
+                'fecha_nacimiento' => ['required', 'date', 'before: -16 years'],
+                'email' => 'required|email',
+                'password' => 'required|min:6|max:15|regex:/^[^,]*$/',
+                'direccion' => 'required|min:6|max:100',
+                'telefono' => 'required|regex:/^(?:(?:\+?[0-9]{2,4})?[ ]?[6789][0-9 ]{8,13})$/',
+                'provincia_id' => 'required',
+                'municipio_id' => 'required',
+                'role' => '',
+            ]);
+
+            $datos['password'] = Hash::make($datos['password']);
+        }
 
         $cliente = Cliente::create($datos);
 
@@ -103,18 +124,43 @@ class UserController extends Controller
 
         User::create($datos);
 
+        if (Auth::check()) {
+            if (Auth::user()->role == 'empresa') {
+                Empresa_Cliente::create([
+                    'id_cliente' => $cliente->id,
+                    'id_empresa' => Auth::user()->empresa_id,
+                ]);
+            } else {
+                $empleado = Empleado::where('id_empleado', Auth::user()->empleado_id)->first();
+                Empresa_Cliente::create([
+                    'id_cliente' => $cliente->id,
+                    'id_empresa' => $empleado->id_empresa,
+                ]);
+            }
+        }
+
         session()->forget('cliente');
+
+        session()->forget('crear');
 
         session()->flash('message', 'Cliente registrado correctamente.');
 
         $email = "nicoadrianx42x@gmail.com";
         //$email = $datos['email'];
 
-        Mail::send('email.user.bienvenidoCliente', ['cliente' => $cliente], function ($message) use ($email) {
-            $message->from('easyappointments@empresa.com', 'Easyappointments');
-            $message->to($email)
-                ->subject('Bienvenido a Easyappointments');
-        });
+        if (Auth::check()) {
+            Mail::send('email.user.bienvenidoClienteEmpresa', ['pass' => $pass, 'cliente' => $cliente], function ($message) use ($email) {
+                $message->from('easyappointments@empresa.com', 'Easyappointments');
+                $message->to($email)
+                    ->subject('Bienvenido a Easyappointments');
+            });
+        } else {
+            Mail::send('email.user.bienvenidoCliente', ['cliente' => $cliente], function ($message) use ($email) {
+                $message->from('easyappointments@empresa.com', 'Easyappointments');
+                $message->to($email)
+                    ->subject('Bienvenido a Easyappointments');
+            });
+        }
 
         return back();
     }

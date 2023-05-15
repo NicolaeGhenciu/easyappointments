@@ -69,6 +69,21 @@
                 $('#detalles-municipio').text(cliente.municipio.municipio);
             });
 
+            //Este evento se activa al abrir el modal de borrar y se encarga de cargar los datos del desasociar.
+
+            $('#borrarModal').on('show.bs.modal', function(event) {
+                var button = $(event.relatedTarget);
+                var cliente = button.data('cliente');
+                $('#borrar-nombre').text(cliente.nombre + " " + cliente.apellidos);
+                $('#borrar-nif').text(cliente.nif);
+                $('#borrar-fecha_nacimiento').text(obtenerFechaFormateada(cliente.fecha_nacimiento));
+                $('#desasociar-form').submit(function() {
+                    var url = "{{ route('desasociarCliente', ['id' => ':idcliente']) }}";
+                    url = url.replace(':idcliente', cliente.id_cliente);
+                    $('#desasociar-form').attr('action', url);
+                });
+            });
+
             //Funcion que recibe fecha por parametro y la formatea con neste formaro dd/mm/yy
 
             function obtenerFechaFormateada(fecha) {
@@ -79,7 +94,77 @@
                 });
             }
         });
+
+        //Esta funcion se activa al clicar el boton de modificar cliente y se encarga de cargar los datos del cliente.
+
+        function modificar(cliente) {
+            $("#nombre_mod").val(cliente.nombre);
+            $("#apellidos_mod").val(cliente.apellidos);
+            $("#nif_mod").val(cliente.nif);
+            $("#fecha_nacimiento_mod").val(cliente.fecha_nacimiento);
+            $("#direccion_mod").val(cliente.direccion);
+            $("#telefono_mod").val(cliente.telefono);
+            $("#provincia_id_mod").val(cliente.provincia_id);
+            $("#municipio_id_mod").val(cliente.municipio_id);
+            $('#modificar-cliente-form').submit(function() {
+                var url = "{{ route('modificarCliente', ['id' => ':idcliente']) }}";
+                url = url.replace(':idcliente', cliente.id_cliente);
+                $('#modificar-cliente-form').attr('action', url);
+            });
+        }
+
+        function getMunicipios(provinciaId, municipioId) {
+            $.ajax({
+                type: "GET",
+                url: "{{ url('/municipiosPorProvincia') }}/" + provinciaId,
+                success: function(data) {
+                    $(municipioId).empty();
+                    $.each(data, function(i, item) {
+                        $(municipioId).append($('<option>', {
+                            value: item.id,
+                            text: item.municipio
+                        }));
+                    });
+                    $(municipioId).prop('disabled', false);
+                }
+            });
+        }
     </script>
+
+    <!-- Si existe una sesion de crear mostramos el modal nada mas cargar la pagina -->
+
+    @if (session()->get('crear') && !session()->has('error'))
+        <script>
+            $(document).ready(function() {
+                $('#añadirModal').modal('show');
+            });
+        </script>
+    @endif
+
+    <!-- Si existe una sesion de asociar mostramos el modal nada mas cargar la pagina -->
+
+    @if (session()->get('asociar') && !session()->has('error'))
+        <script>
+            $(document).ready(function() {
+                $('#asociarModal').modal('show');
+            });
+        </script>
+    @endif
+
+    <!-- Si existe una sesion de modificar mostramos el modal nada mas cargar la pagina -->
+
+    @if (session()->get('modificar'))
+        <script>
+            $(document).ready(function() {
+                $('#modificarModal').modal('show');
+                $('#modificar-cliente-form').submit(function() {
+                    var url = "{{ route('modificarCliente', ['id' => ':idcliente']) }}";
+                    url = url.replace(':idcliente', {{ old('id_cliente', session('id_cliente')) }});
+                    $('#modificar-cliente-form').attr('action', url);
+                });
+            });
+        </script>
+    @endif
 
 @endsection
 
@@ -89,8 +174,13 @@
         <div class="row align-items-center">
             <div class="col-auto">
                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Alta de un cliente">
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"><i
-                            class="bi bi-person-fill-add"></i></a></span>
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal">
+                        <i class="bi bi-person-fill-add"></i></a></span>
+            </div>
+            <div class="col-auto">
+                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Asociar un cliente existente">
+                    <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#asociarModal">
+                        <i class="bi bi-person-plus-fill"></i></a></span>
             </div>
             <div class="col text-center">
                 <h1>Lista de Clientes</h1>
@@ -142,6 +232,10 @@
                                     <a class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#modificarModal"
                                         data-cliente="{{ $cliente }}">
                                         <i class="bi bi-person-fill-gear"></i></a></span>
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Desasociar">
+                                    <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
+                                        data-cliente="{{ $cliente }}">
+                                        <i class="bi bi-trash-fill"></i></a></span>
                         </td>
                     </tr>
                 @endforeach
@@ -211,7 +305,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('crearUsuarioCliente', ['id' => Auth::user()->empresa_id]) }}" method="post">
+                    <form action="{{ route('crearUsuarioCliente') }}" method="post">
                         @csrf
                         <div class="row mb-3">
 
@@ -341,6 +435,219 @@
                     <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal modificar cliente -->
+
+    <div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="modificarModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modificarModalLabel"><b>Modificar datos del cliente</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="" method="post" id="modificar-cliente-form">
+                        @csrf
+                        @method('PUT')
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label class="form-label">Nombre:</label>
+                                <input type="text" class="form-control border border-primary" name="nombre"
+                                    id="nombre_mod" value="{{ old('nombre') }}">
+                                @if ($errors->has('nombre') && session()->get('modificar') && session()->get('id_cliente'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Apellidos:</label>
+                                <input type="text" class="form-control border border-primary" name="apellidos"
+                                    id="apellidos_mod" value="{{ old('apellidos') }}">
+                                @if ($errors->has('apellidos') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('apellidos', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Fecha de nacimiento:</label>
+                                <input type="date" class="form-control border border-primary" name="fecha_nacimiento"
+                                    id="fecha_nacimiento_mod" value="{{ old('fecha_nacimiento') }}">
+                                @if ($errors->has('fecha_nacimiento') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">NIF:</label>
+                                <input type="text" class="form-control border border-primary" name="nif"
+                                    id="nif_mod" value="{{ old('nif') }}">
+                                @if ($errors->has('nif') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('nif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label class="form-label">Dirección:</label>
+                                <input type="text" class="form-control border border-primary" name="direccion"
+                                    id="direccion_mod" value="{{ old('direccion') }}">
+                                @if ($errors->has('direccion') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('direccion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label class="form-label">Teléfono:</label>
+                                <input type="number" class="form-control border border-primary" name="telefono"
+                                    id="telefono_mod" value="{{ old('telefono') }}">
+                                @if ($errors->has('telefono') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('telefono', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label for="provincia_id" class="form-label">Provincia:</label>
+                                <select class="form-select" name="provincia_id" id="provincia_id_mod"
+                                    onchange="getMunicipios(this.value, '#municipio_id_mod')">
+                                    <option value="" disabled selected>Seleccione una provincia</option>
+                                    @foreach ($provincias as $provincia)
+                                        <option value="{{ $provincia->id }}"
+                                            {{ old('provincia_id') == $provincia->id ? 'selected' : '' }}>
+                                            {{ $provincia->provincia }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('provincia_id') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('provincia_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="col">
+                                <label for="municipio_id" class="form-label">Municipio:</label>
+                                <select class="form-select" name="municipio_id" id="municipio_id_mod">
+                                    @foreach ($municipios as $municipio)
+                                        <option value="{{ $municipio->id }}"
+                                            {{ old('municipio_id') == $municipio->id ? 'selected' : '' }}>
+                                            {{ $municipio->municipio }}</option>
+                                    @endforeach
+                                </select>
+                                @if ($errors->has('municipio_id') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('municipio_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" type="submit">Modificar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal asociar cliente -->
+
+    <div class="modal fade" id="asociarModal" tabindex="-1" aria-labelledby="asociarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="asociarModalLabel"><b>Asociar un cliente</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form action="{{ route('asociarCliente') }}" method="post">
+                        @csrf
+                        <p>Ingrese el <b>correo electrónico</b> del cliente que desea asociar:</p>
+                        <div class="row mb-6">
+
+                            <div class="col">
+                                <label class="form-label">Email:</label>
+                                <input type="email" class="form-control border border-primary" name="email"
+                                    value="{{ old('email') }}">
+                                @if ($errors->has('email') && session()->get('asociar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                        </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button class="btn btn-primary" type="submit">Asociar</button>
+                </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal desasociar -->
+
+    <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="borrarModalLabel"><b>Desasociar un cliente</b></h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>¿Estás seguro que deseas desasociar al cliente?</p>
+                    <table class="table">
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">NIF</th>
+                            <td class="bg-light"><span id="borrar-nif"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Nombre y apellidos</th>
+                            <td><span id="borrar-nombre"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Fecha de nacimiento</th>
+                            <td><span id="borrar-fecha_nacimiento"></span></td>
+                        </tr>
+                    </table>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <form method="POST" id="desasociar-form" action="">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Desasociar</button>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
