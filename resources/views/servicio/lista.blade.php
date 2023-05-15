@@ -79,6 +79,11 @@
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#añadirModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.alert-danger').hide();
+                });
             });
         </script>
     @endif
@@ -93,6 +98,11 @@
                     var url = "{{ route('modificarServicio', ['id' => 'idservicio']) }}";
                     url = url.replace('idservicio', {{ old('id_servicio', session('id_servicio')) }});
                     $('#modificar-servicio-form').attr('action', url);
+                });
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#modificarModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.alert-danger').hide();
                 });
             });
         </script>
@@ -346,7 +356,7 @@
     <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="borrarModalLabel"><b>Confirmar baja de servicio </b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

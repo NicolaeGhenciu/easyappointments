@@ -137,6 +137,12 @@
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
+
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#añadirModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.alert-danger').hide();
+                });
             });
         </script>
     @endif
@@ -161,6 +167,11 @@
                     var url = "{{ route('modificarCliente', ['id' => ':idcliente']) }}";
                     url = url.replace(':idcliente', {{ old('id_cliente', session('id_cliente')) }});
                     $('#modificar-cliente-form').attr('action', url);
+                });
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#modificarModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.alert-danger').hide();
                 });
             });
         </script>
@@ -459,7 +470,7 @@
                                 <label class="form-label">Nombre:</label>
                                 <input type="text" class="form-control border border-primary" name="nombre"
                                     id="nombre_mod" value="{{ old('nombre') }}">
-                                @if ($errors->has('nombre') && session()->get('modificar') && session()->get('id_cliente'))
+                                @if ($errors->has('nombre') && session()->get('modificar'))
                                     <div class="alert alert-danger mt-1">
                                         {!! $errors->first('nombre', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                     </div>
@@ -619,7 +630,7 @@
     <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="borrarModalLabel"><b>Desasociar un cliente</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>

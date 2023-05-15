@@ -114,6 +114,8 @@ class EmpleadoController extends Controller
 
     public function asociarServicio($id)
     {
+        session()->flash('asociar');
+
         $empleadoDatos = Empleado::where('id_empleado', $id)->first();
 
         if ($empleadoDatos->id_empresa != Auth::user()->empresa_id) {
@@ -139,6 +141,8 @@ class EmpleadoController extends Controller
             'id_empleado' => $id,
             'id_servicio' => $datos['servicio_id'],
         ]);
+
+        session()->forget('asociar');
 
         return redirect()->route('serviciosEmpleado', $id);
     }

@@ -65,6 +65,21 @@
         });
     </script>
 
+    <!-- Si existe una sesion de crear mostramos el modal nada mas cargar la pagina -->
+
+    @if (session()->get('asociar'))
+        <script>
+            $(document).ready(function() {
+                $('#añadirModal').modal('show');
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#añadirModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.alert-danger').hide();
+                });
+            });
+        </script>
+    @endif
+
 @endsection
 
 @section('contenido')
