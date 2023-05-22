@@ -167,7 +167,7 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                        @if (Auth::check() && Auth::user()->role == 'empleado' || Auth::user()->role == 'empresa')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
                                     aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"

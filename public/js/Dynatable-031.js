@@ -88,10 +88,10 @@
             perPageText: 'Listar: ',
             pageText: 'Páginas: ',
             recordCountPageBoundTemplate: '{pageLowerBound} to {pageUpperBound} of',
-            recordCountPageUnboundedTemplate: '{recordsShown} of',
+            recordCountPageUnboundedTemplate: '{recordsShown} de',
             recordCountTotalTemplate: '{recordsQueryCount} {collectionName}',
             recordCountFilteredTemplate: ' (filtered from {recordsTotal} total records)',
-            recordCountText: 'Showing',
+            recordCountText: 'Mostrando',
             recordCountTextTemplate: '{text} {pageTemplate} {totalTemplate} {filteredTemplate}',
             recordCountTemplate: '<span id="dynatable-record-count-{elementId}" class="dynatable-record-count">{textTemplate}</span>',
             processingText: 'Processing...'
@@ -130,7 +130,7 @@
             page: 'page',
             perPage: 'perPage',
             offset: 'offset',
-            records: 'records',
+            records: 'resultados',
             record: null,
             queryRecordCount: 'queryRecordCount',
             totalRecordCount: 'totalRecordCount'

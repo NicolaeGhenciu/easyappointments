@@ -125,10 +125,6 @@
 
                 <div class="d-grid">
                     <button class="btn btn-primary" type="submit">Iniciar sesión</button>
-                    <a href="" class="btn btn-danger mt-1" type="submit">Continuar con &nbsp;<i
-                            class="bi bi-google"></i></a>
-                    <a href="" class="btn btn-dark mt-1" type="submit">Continuar con &nbsp;<i
-                            class="bi bi-github"></i></a>
                     <a href="" class="btn btn-warning mt-1" type="submit">¿Has olvidado tu
                         contraseña? <i class="bi bi-key-fill"></i> </a>
                     <a class="btn btn-info mt-1" onclick="showRegisterForm()">¿No tienes
