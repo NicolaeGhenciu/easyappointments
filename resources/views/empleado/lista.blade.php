@@ -252,7 +252,11 @@
                 <li class="page-item {{ $empleados->currentPage() == 1 ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $empleados->url(1) }}">Primera</a>
                 </li>
-                @for ($i = 1; $i <= $empleados->lastPage(); $i++)
+                @php
+                    $start = max($empleados->currentPage() - 1, 1);
+                    $end = min($start + 2, $empleados->lastPage());
+                @endphp
+                @for ($i = $start; $i <= $end; $i++)
                     <li class="page-item {{ $empleados->currentPage() == $i ? 'active' : '' }}">
                         <a class="page-link" href="{{ $empleados->url($i) }}">{{ $i }}</a>
                     </li>

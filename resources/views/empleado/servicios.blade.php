@@ -43,6 +43,7 @@
                 $('#asociar-nombre').text(servicio.nombre);
                 $('#asociar-descripcion').text(servicio.descripcion);
                 $('#asociar-precio').text(servicio.precio);
+                $('#asociar-duracion').text(servicio.duracion);
                 $("#tabladatos").fadeIn(200);
             });
 
@@ -56,6 +57,7 @@
                 $('#borrar-nombre').text(servicio.servicio.nombre);
                 $('#borrar-descripcion').text(servicio.servicio.descripcion);
                 $('#borrar-precio').text(servicio.servicio.precio);
+                $('#borrar-duracion').text(servicio.servicio.duracion);
                 $('#desasociar-form').submit(function() {
                     var url = "{{ route('desasociarServicio', ['id' => ':idasociacion']) }}";
                     url = url.replace(':idasociacion', servicio.id_servicio_empleado);
@@ -119,6 +121,7 @@
                     <th scope="col">Nombre</th>
                     <th scope="col">Descripción</th>
                     <th scope="col">Precio</th>
+                    <th scope="col">Duración</th>
                     <th scope="col">Opciones</th>
                 </tr>
             </thead>
@@ -129,6 +132,7 @@
                         <td>{{ $servicio->servicio->nombre }}</td>
                         <td>{{ $servicio->servicio->descripcion }}</td>
                         <td>{{ $servicio->servicio->precio }} €</td>
+                        <td>{{ $servicio->servicio->duracion }} minutos</td>
                         <td>
                             <div class="btn-group btn-group-md gap-1">
                                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar asociación">
@@ -143,7 +147,6 @@
         </table>
     </div>
 
-
     <div id="centrar">
         <nav aria-label="Page navigation example">
             <ul class="pagination">
@@ -153,7 +156,11 @@
                 <li class="page-item {{ $servicios->currentPage() == 1 ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $servicios->url(1) }}">Primera</a>
                 </li>
-                @for ($i = 1; $i <= $servicios->lastPage(); $i++)
+                @php
+                    $start = max($servicios->currentPage() - 1, 1);
+                    $end = min($start + 2, $servicios->lastPage());
+                @endphp
+                @for ($i = $start; $i <= $end; $i++)
                     <li class="page-item {{ $servicios->currentPage() == $i ? 'active' : '' }}">
                         <a class="page-link" href="{{ $servicios->url($i) }}">{{ $i }}</a>
                     </li>
@@ -222,6 +229,10 @@
                                         <th class="bg-dark text-light" scope="row">Precio</th>
                                         <td><span id="asociar-precio"></span> €</td>
                                     </tr>
+                                    <tr>
+                                        <th class="bg-dark text-light" scope="row">Duración</th>
+                                        <td><span id="asociar-duracion"></span> minutos</td>
+                                    </tr>
                                 </tbody>
                             </table>
                         </div>
@@ -262,7 +273,11 @@
                         </tr>
                         <tr>
                             <th scope="row" class="bg-dark text-light">Precio</th>
-                            <td><span id="borrar-precio"></span></td>
+                            <td><span id="borrar-precio"></span> €</td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Duración</th>
+                            <td><span id="borrar-duracion"></span> minutos</td>
                         </tr>
                     </table>
                 </div>

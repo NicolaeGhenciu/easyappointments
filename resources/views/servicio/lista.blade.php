@@ -46,6 +46,7 @@
                 $('#borrar-nombre').text(servicio.nombre);
                 $('#borrar-descripcion').text(servicio.descripcion);
                 $('#borrar-precio').text(servicio.precio);
+                $('#borrar-duracion').text(servicio.duracion + " minutos");
                 $('#borrar-servicio-form').submit(function() {
                     // event.preventDefault();
                     //var url = "{{ route('borrarServicio', ['id' => '0']) }}";
@@ -65,6 +66,7 @@
             $("#nombre_mod").val(servicio.nombre);
             $("#descripcion_mod").val(servicio.descripcion);
             $("#precio_mod").val(servicio.precio);
+            $("#duracion_mod").val(servicio.duracion);
             $('#modificar-servicio-form').submit(function() {
                 var url = "{{ route('modificarServicio', ['id' => 'idservicio']) }}";
                 url = url.replace('idservicio', servicio.id_servicio);
@@ -146,6 +148,7 @@
                     <th scope="col">Nombre</th>
                     <th scope="col">Descripción</th>
                     <th scope="col">Precio</th>
+                    <th scope="col">Duración</th>
                     <th scope="col">Opciones</th>
                 </tr>
             </thead>
@@ -156,6 +159,7 @@
                         <td>{{ $servicio->nombre }}</td>
                         <td>{{ $servicio->descripcion }}</td>
                         <td>{{ $servicio->precio }} €</td>
+                        <td>{{ $servicio->duracion }} minutos</td>
                         <td>
                             <div class="btn-group btn-group-md gap-1">
                                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Modificar"
@@ -184,7 +188,11 @@
                 <li class="page-item {{ $servicios->currentPage() == 1 ? 'disabled' : '' }}">
                     <a class="page-link" href="{{ $servicios->url(1) }}">Primera</a>
                 </li>
-                @for ($i = 1; $i <= $servicios->lastPage(); $i++)
+                @php
+                    $start = max($servicios->currentPage() - 1, 1);
+                    $end = min($start + 2, $servicios->lastPage());
+                @endphp
+                @for ($i = $start; $i <= $end; $i++)
                     <li class="page-item {{ $servicios->currentPage() == $i ? 'active' : '' }}">
                         <a class="page-link" href="{{ $servicios->url($i) }}">{{ $i }}</a>
                     </li>
@@ -252,6 +260,20 @@
                                     </div>
                                 @endif
                             </div>
+                        </div>
+
+                        <div class="row mb-3">
+                            <div class="col">
+                                <label class="form-label">Duración:</label>
+                                <input type="number" class="form-control border border-primary" name="duracion"
+                                    placeholder="minutos"
+                                    @if (old('duracion') && session()->get('crear')) value="{{ old('duracion') }}" @endif>
+                                @if ($errors->has('duracion') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('duracion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
 
                             <div class="col">
                                 <label class="form-label">Precio:</label>
@@ -316,7 +338,6 @@
                         </div>
 
                         <div class="row mb-3">
-
                             <div class="col">
                                 <label class="form-label">Descripción:</label>
                                 <input type="text" class="form-control border border-primary" name="descripcion"
@@ -324,6 +345,20 @@
                                 @if ($errors->has('descripcion') && session()->get('modificar'))
                                     <div class="alert alert-danger mt-1">
                                         {!! $errors->first('descripcion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+
+                        <div class="row mb-3">
+
+                            <div class="col">
+                                <label class="form-label">Duración:</label>
+                                <input type="text" class="form-control border border-primary" name="duracion"
+                                    id="duracion_mod" value="{{ old('duracion') }}">
+                                @if ($errors->has('duracion') && session()->get('modificar'))
+                                    <div class="alert alert-danger mt-1">
+                                        {!! $errors->first('duracion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                     </div>
                                 @endif
                             </div>
@@ -378,6 +413,10 @@
                         <tr>
                             <th scope="row" class="bg-dark text-light">Precio</th>
                             <td><span id="borrar-precio"></span></td>
+                        </tr>
+                        <tr>
+                            <th scope="row" class="bg-dark text-light">Duración</th>
+                            <td><span id="borrar-duracion"></span></td>
                         </tr>
                     </table>
                 </div>

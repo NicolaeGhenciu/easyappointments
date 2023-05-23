@@ -104,5 +104,7 @@ Route::middleware(['auth'])->group(function () {
         // --- Citas
         //Ver la agenda mensual, semanal y diaria del empleado
         Route::get('/agendaEmpleado', [CitasController::class, 'agendaEmpleado'])->name('agendaEmpleado');
+        //Programar una nueva cita
+        Route::post('/nuevaCitaE', [CitasController::class, 'nuevaCitaE'])->name('nuevaCitaE');
     });
 });

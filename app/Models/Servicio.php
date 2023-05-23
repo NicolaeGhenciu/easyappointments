@@ -23,6 +23,7 @@ class Servicio extends Model
         'nombre',
         'descripcion',
         'precio',
+        'duracion',
     ];
 
     public function empresa()

@@ -14,6 +14,7 @@
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
+            //configuracion del full calendar
             var calendar = new FullCalendar.Calendar(calendarEl, {
                 locale: 'es',
                 headerToolbar: {
@@ -23,16 +24,15 @@
                 },
 
                 // customize the button names,
-                // otherwise they'd all just say "list"
                 views: {
                     listDay: {
-                        buttonText: 'list day'
+                        buttonText: 'Día'
                     },
                     listWeek: {
-                        buttonText: 'list week'
+                        buttonText: 'Semana'
                     },
                     dayGridMonth: {
-                        buttonText: 'month'
+                        buttonText: 'Mes'
                     }
                 },
 
@@ -43,6 +43,7 @@
                 editable: true,
                 dayMaxEvents: true,
                 events: [
+                    //recogida de datos
                     @foreach ($citas as $cita)
                         {
                             title: '#{{ $cita->servicio->nombre }} {{ $cita->cliente->apellidos }}',
@@ -66,45 +67,226 @@
                         },
                     @endforeach
                 ],
-
+                //evento al hacer clic en una cita
                 eventClick: function(info) {
-                    // obtener la información de la cita
+                    // obtener los datos de la cita
                     var empresa = obtenerPropiedadDeEvento(info.event, 'empresa');
                     var empleado = obtenerPropiedadDeEvento(info.event, 'empleado');
                     var servicio = obtenerPropiedadDeEvento(info.event, 'servicio');
                     var cliente = obtenerPropiedadDeEvento(info.event, 'cliente');
-                    //aplicar
-                    $('#nombre_empresa').text(empresa.nombre);
-                    $('#cif').text(empresa.cif);
-                    $('#telefono_empresa').text(empresa.telefono);
-                    $('#nif_empleado').text(empleado.nif);
-                    $('#nombre_empleado').text(empleado.nombre + " " + empleado.apellidos);
-                    $('#cargo').text(empleado.cargo);
-                    $('#cod').text(servicio.cod);
-                    $('#nombre_servicio').text(servicio.nombre);
-                    $('#precio').text(servicio.precio);
-                    $('#nif_cliente').text(cliente.nif);
-                    $('#nombre_cliente').text(cliente.nombre + " " + cliente.apellidos);
-                    $('#fecha_inicio').text(obtenerFechaFormateada(info.event.start));
-                    $('#fecha_fin').text(obtenerFechaFormateada(info.event.end));
-                    $('#estado').text(info.event.extendedProps.status);
 
-                    //mostrar
+                    // poner los datos en el modal
+                    $('#detalles_nombre_empresa').text(empresa.nombre);
+                    $('#detalles_cif').text(empresa.cif);
+                    $('#detalles_telefono_empresa').text(empresa.telefono);
+                    $('#detalles_nif_empleado').text(empleado.nif);
+                    $('#detalles_nombre_empleado').text(empleado.nombre + " " + empleado.apellidos);
+                    $('#detalles_cargo').text(empleado.cargo);
+                    $('#detalles_cod').text(servicio.cod);
+                    $('#detalles_nombre_servicio').text(servicio.nombre);
+                    $('#detalles_precio').text(servicio.precio);
+                    $('#detalles_duracion').text(servicio.duracion);
+                    $('#detalles_nif_cliente').text(cliente.nif);
+                    $('#detalles_nombre_cliente').text(cliente.nombre + " " + cliente.apellidos);
+                    $('#detalles_fecha_inicio').text(obtenerFechaFormateada(info.event.start));
+                    $('#detalles_fecha_fin').text(obtenerFechaFormateada(info.event.end));
+                    $('#detalles_estado').text(info.event.extendedProps.status);
+
+                    //mostrar el modal y ocultar los popover de full calendar
                     $('#detallesModal').modal('show');
                     $('.fc-popover').hide();
                 }
 
             });
 
+            //renderizamos
             calendar.render();
         });
 
+        $(document).ready(function() {
+
+            // DESACTIVAR DIAS ANTERIORES A HOY EN EL SELECT DE FECHA
+
+            // Obtener la fecha actual
+            var today = new Date().toISOString().split('T')[0];
+
+            // Obtener el campo de fecha por su ID
+            var fechaInput = document.getElementById('fecha');
+
+            // Establecer la fecha mínima permitida como hoy
+            fechaInput.min = today;
+
+            // Obtener todas las etiquetas <option> dentro del campo de fecha
+            var options = fechaInput.getElementsByTagName('option');
+
+            // Recorrer todas las etiquetas <option> y deshabilitar las fechas anteriores a hoy
+            for (var i = 0; i < options.length; i++) {
+                var date = new Date(options[i].value);
+
+                // Comparar la fecha con la fecha actual
+                if (date < today) {
+                    options[i].disabled = true;
+                }
+            }
+
+            //LOGICA PARA EL SELECT DE FECHA Y EL SERVICIOS QUE SI LOS DOS ESTAN SELECCIONADOS
+            //PROCEDERAN PRIMERO A MOSTRAR UNA TABLA CON INFO DEL SERVICIO Y A CALCULAR LAS POSIBLES
+            //CITAS
+
+            // Obtener los elementos del DOM una vez que el documento esté listo
+            var servicioSelect = $('#servicio');
+            var fechaInput = $('#fecha');
+
+            //Este evento muestra los datos del servicio al seleccionar en el select
+            $('#servicio').change(function() {
+                obtenerDisponibilidad();
+                var servicioSeleccionado = servicioSelect.val();
+                var servicioObjeto = JSON.parse(servicioSeleccionado);
+                $('#añadir-info-cod').text(servicioObjeto.cod);
+                $('#añadir-info-nombre').text(servicioObjeto.nombre);
+                $('#añadir-info-descripcion').text(servicioObjeto.descripcion);
+                $('#añadir-info-precio').text(servicioObjeto.precio);
+                $('#añadir-info-duracion').text(servicioObjeto.duracion);
+                $("#tablaDatosServicios").fadeIn(200);
+            });
+
+            fechaInput.on('change', obtenerDisponibilidad);
+
+            //funcion que cmprueba si hemos seleccionado tanto un servicio como una fecha y recoge ciertos datos
+            function obtenerDisponibilidad() {
+                // Obtén el botón por su clase o cualquier otro selector adecuado
+                var boton = $('.btn-primary');
+
+                // Accede al valor del atributo 'data-disponibilidad'
+                var disponibilidad = boton.data('disponibilidad');
+                // Accede al valor del atributo 'data-disponibilidad'
+                var citas = boton.data('citas');
+
+                var servicioSeleccionado = servicioSelect.val();
+                var fechaSeleccionada = fechaInput.val();
+
+                // Verificar si ambos valores están seleccionados
+                if (servicioSeleccionado && fechaSeleccionada) {
+                    // Realizar la petición AJAX o cualquier otra acción que desees realizar
+                    var servicioObjeto = JSON.parse(servicioSeleccionado);
+
+                    //llamamos a la funcion
+                    actualizarSelectHora(fechaSeleccionada, servicioObjeto, disponibilidad, citas)
+
+                }
+            }
+
+            //FUNCION QUE COMPRUEBA LAS CITAS DISPONIBLES
+
+            function actualizarSelectHora(fechaSeleccionada, servicio, disponibilidadEmpleado, citasActivas) {
+
+                // Obtener la duración del servicio en minutos
+                var duracionServicio = servicio.duracion;
+
+                // Obtener la fecha de inicio y fecha de fin del empleado para el día de la semana seleccionado
+                var fechaSeleccionadaObjeto = new Date(fechaSeleccionada);
+
+                // Obtener el día de la semana (0: domingo, 1: lunes, ..., 6: sábado)
+                var diaSemana = fechaSeleccionadaObjeto.getDay();
+                var disponibilidadDia = disponibilidadEmpleado.filter(function(elemento) {
+                    return elemento.dia_semana === diaSemana.toString();
+                });
+
+                if (disponibilidadDia.length != 0) {
+
+                    var horaInicioEmpleado = new Date(fechaSeleccionadaObjeto.toDateString() + ' ' +
+                        disponibilidadDia[
+                            0].hora_inicio);
+                    var horaFinEmpleado = new Date(fechaSeleccionadaObjeto.toDateString() + ' ' + disponibilidadDia[
+                            0]
+                        .hora_fin);
+
+                    // Crear un arreglo para almacenar las opciones del select
+                    var opcionesSelect = [];
+
+                    // Iterar en intervalos de duración del servicio dentro de los límites del empleado
+                    var horaActual = horaInicioEmpleado;
+                    while (horaActual <= horaFinEmpleado) {
+                        // Verificar si la hora actual está disponible
+                        var horaOcupada = false;
+
+                        // Verificar si la hora actual coincide exactamente con la hora de inicio de una cita existente
+                        for (var i = 0; i < citasActivas.length; i++) {
+                            var cita = citasActivas[i];
+                            var horaInicioCita = new Date(cita.fecha_inicio);
+                            var horaFinCita = new Date(cita.fecha_fin);
+
+                            // Verificar si la hora actual se superpone con una cita existente
+                            if (horaActual >= horaInicioCita && horaActual < horaFinCita) {
+                                horaOcupada = true;
+                                break;
+                            }
+
+                            // Verificar si la hora actual se encuentra dentro del tiempo de duración de la cita existente
+                            if (horaActual.getTime() + duracionServicio * 60000 > horaInicioCita.getTime() &&
+                                horaActual.getTime() + duracionServicio * 60000 <= horaFinCita.getTime()) {
+                                horaOcupada = true;
+                                break;
+                            }
+                        }
+
+                        // Verificar si la hora actual más la duración del servicio excede el horario de finalización del empleado
+                        if (horaActual.getTime() + duracionServicio * 60000 > horaFinEmpleado.getTime()) {
+                            horaOcupada = true;
+                        }
+
+                        // Si la hora actual no está ocupada, agregarla como opción al select
+                        if (!horaOcupada) {
+                            var opcion = {
+                                hora: horaActual.toLocaleTimeString([], {
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                }),
+                                timestamp: horaActual.getTime()
+                            };
+                            opcionesSelect.push(opcion);
+                        }
+
+                        // Avanzar al siguiente intervalo de duración del servicio
+                        horaActual.setTime(horaActual.getTime() + duracionServicio * 60000);
+                    }
+                    console.log(opcionesSelect)
+
+                    // Actualizar el select de horas con las opciones generadas
+                    var selectHora = document.getElementById('select_hora');
+                    if (selectHora) {
+                        selectHora.innerHTML = ''; // Limpiar opciones anteriores
+                    }
+
+                    // Agregar las opciones al select
+                    opcionesSelect.forEach(function(opcion) {
+                        var option = document.createElement('option');
+                        option.value = opcion.hora;
+                        option.text = opcion.hora;
+                        selectHora.appendChild(option);
+                    });
+
+                } else {
+                    var selectHora = document.getElementById('select_hora');
+                    if (selectHora) {
+                        selectHora.innerHTML = ''; // Limpiar opciones anteriores
+                    }
+                    var option = document.createElement('option');
+                    option.text = "Seleccione otro día";
+                    selectHora.appendChild(option);
+                }
+            }
+
+        });
+
+        //funcion para poner hacer objeto.atributo
         function obtenerPropiedadDeEvento(evento, propiedad) {
             var empresaString = $('<textarea />').html(evento.extendedProps[propiedad]).text();
             var objeto = JSON.parse(empresaString);
             return objeto;
         }
 
+        //funcion para formatear fecha
         function obtenerFechaFormateada(fecha) {
             return new Date(fecha).toLocaleDateString('es-ES', {
                 day: '2-digit',
@@ -113,6 +295,21 @@
             });
         }
     </script>
+
+    <!-- Si existe una sesion de crear mostramos el modal nada mas cargar la pagina -->
+
+    @if (session()->get('crear'))
+        <script>
+            $(document).ready(function() {
+                $('#añadirModal').modal('show');
+                //Limpiar los mensajes de error al cerrar el modal
+                $('#añadirModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('#error-validacion').hide();
+                });
+            });
+        </script>
+    @endif
 
     <style>
         #calendar {
@@ -143,7 +340,8 @@
         <div class="row align-items-center">
             <div class="col-auto">
                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Programar una nueva cita">
-                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal">
+                    <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"
+                        data-disponibilidad="{{ $disponibilidad }}" data-citas="{{ $citas }}">
                         <i class="bi bi-calendar-plus-fill"></i></a></span>
             </div>
             <div class="col text-center">
@@ -190,9 +388,9 @@
                                         <h4 class="card-title">Empresa</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>Nombre:</strong> <span id="nombre_empresa"></span></p>
-                                        <p><strong>CIF:</strong> <span id="cif"></span></p>
-                                        <p><strong>Teléfono:</strong> <span id="telefono_empresa"></span></p>
+                                        <p><strong>Nombre:</strong> <span id="detalles_nombre_empresa"></span></p>
+                                        <p><strong>CIF:</strong> <span id="detalles_cif"></span></p>
+                                        <p><strong>Teléfono:</strong> <span id="detalles_telefono_empresa"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -202,9 +400,10 @@
                                         <h4 class="card-title">Empleado</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>NIF:</strong> <span id="nif_empleado"></span></p>
-                                        <p><strong>Nombre y apellidos:</strong> <span id="nombre_empleado"></span></p>
-                                        <p><strong>Cargo:</strong> <span id="cargo"></span></p>
+                                        <p><strong>NIF:</strong> <span id="detalles_nif_empleado"></span></p>
+                                        <p><strong>Nombre y apellidos:</strong> <span id="detalles_nombre_empleado"></span>
+                                        </p>
+                                        <p><strong>Cargo:</strong> <span id="detalles_cargo"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -217,9 +416,10 @@
                                         <h4 class="card-title">Servicios</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>Código:</strong> <span id="cod"></span></p>
-                                        <p><strong>Nombre:</strong> <span id="nombre_servicio"></span></p>
-                                        <p><strong>Precio:</strong> <span id="precio"></span> €</p>
+                                        <p><strong>Código:</strong> <span id="detalles_cod"></span></p>
+                                        <p><strong>Nombre:</strong> <span id="detalles_nombre_servicio"></span></p>
+                                        <p><strong>Precio:</strong> <span id="detalles_precio"></span> €</p>
+                                        <p><strong>Duración:</strong> <span id="detalles_duracion"></span> minutos</p>
                                     </div>
                                 </div>
                             </div>
@@ -229,8 +429,9 @@
                                         <h4 class="card-title">Cliente</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>NIF:</strong> <span id="nif_cliente"></span></p>
-                                        <p><strong>Nombre y apellidos:</strong> <span id="nombre_cliente"></span></p>
+                                        <p><strong>NIF:</strong> <span id="detalles_nif_cliente"></span></p>
+                                        <p><strong>Nombre y apellidos:</strong> <span id="detalles_nombre_cliente"></span>
+                                        </p>
                                     </div>
                                 </div>
                             </div>
@@ -243,9 +444,9 @@
                                         <h4 class="card-title">Detalles</h4>
                                     </div>
                                     <div class="card-body">
-                                        <p><strong>Fecha de inicio:</strong> <span id="fecha_inicio"></span></p>
-                                        <p><strong>Fecha de fin:</strong> <span id="fecha_fin"></span></p>
-                                        <p><strong>Estado:</strong> <span id="estado"></span></p>
+                                        <p><strong>Fecha de inicio:</strong> <span id="detalles_fecha_inicio"></span></p>
+                                        <p><strong>Fecha de fin:</strong> <span id="detalles_fecha_fin"></span></p>
+                                        <p><strong>Estado:</strong> <span id="detalles_estado"></span></p>
                                     </div>
                                 </div>
                             </div>
@@ -262,7 +463,7 @@
         </div>
     </div>
 
-    <!-- Modal añadir empleado -->
+    <!-- Modal añadir cita -->
 
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
@@ -272,7 +473,7 @@
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('crearUsuarioEmpleado') }}" method="post">
+                    <form action="{{ route('nuevaCitaE') }}" method="post">
                         @csrf
                         <div class="row mb-3">
 
@@ -286,26 +487,26 @@
                                             {{ $cliente->nif }}-{{ $cliente->nombre }} {{ $cliente->apellidos }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('cliente_id') && session()->get('modificar'))
-                                    <div class="alert alert-danger mt-1">
+                                @if ($errors->has('cliente_id') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1" id="error-validacion">
                                         {!! $errors->first('cliente_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                     </div>
                                 @endif
                             </div>
 
                             <div class="col">
-                                <label for="cliente_id" class="form-label">Servicio:</label>
-                                <select class="form-select" name="cliente_id" id="cliente_id_mod">
+                                <label for="servicio_obj" class="form-label">Servicio:</label>
+                                <select class="form-select" name="servicio_obj" id="servicio">
                                     <option value="" disabled selected>Seleccione un servicio</option>
                                     @foreach ($servicios as $servicio)
-                                        <option value="{{ $servicio->id_servicio }}"
-                                            {{ old('servicio_id') == $servicio->id_servicio ? 'selected' : '' }}>
-                                            {{ $servicio->cod }}-{{ $servicio->nombre }}</option>
+                                        <option value="{{ $servicio }}"
+                                            {{ old('servicio_obj') == $servicio->id_servicio ? 'selected' : '' }}>
+                                            {{ $servicio->cod }} - {{ $servicio->nombre }}</option>
                                     @endforeach
                                 </select>
-                                @if ($errors->has('cliente_id') && session()->get('modificar'))
-                                    <div class="alert alert-danger mt-1">
-                                        {!! $errors->first('cliente_id', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                @if ($errors->has('servicio_obj') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1" id="error-validacion">
+                                        {!! $errors->first('servicio_obj', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                     </div>
                                 @endif
                             </div>
@@ -313,14 +514,53 @@
 
                         <div class="row mb-3">
                             <div class="col">
-                                <label class="form-label">Fecha</label>
-                                <input type="date" class="form-control border border-primary" name="fecha_nacimiento"
-                                    @if (old('fecha_nacimiento') && session()->get('crear')) value="{{ old('fecha_nacimiento') }}" @endif>
-                                @if ($errors->has('fecha_nacimiento') && session()->get('crear'))
-                                    <div class="alert alert-danger mt-1">
-                                        {!! $errors->first('fecha_nacimiento', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                <label class="form-label">Fecha:</label>
+                                <input type="date" class="form-control border border-primary" name="fecha"
+                                    id="fecha" @if (old('fecha') && session()->get('crear')) value="{{ old('fecha') }}" @endif>
+                                @if ($errors->has('fecha') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1" id="error-validacion">
+                                        {!! $errors->first('fecha', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
                                     </div>
                                 @endif
+                            </div>
+
+                            <div class="col">
+                                <label for="hora" class="form-label">Hora:</label>
+                                <select class="form-select" name="hora" id="select_hora">
+                                    <option value="" disabled selected>Seleccione una hora</option>
+                                </select>
+                                @if ($errors->has('hora') && session()->get('crear'))
+                                    <div class="alert alert-danger mt-1" id="error-validacion">
+                                        {!! $errors->first('hora', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                    </div>
+                                @endif
+                            </div>
+
+                            <div class="table-responsive mt-3" style="display:none;" id="tablaDatosServicios">
+                                <table class="table table-striped">
+                                    <tbody>
+                                        <tr>
+                                            <th class="bg-dark text-light" scope="row">Código</th>
+                                            <td><span id="añadir-info-cod"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-dark text-light" scope="row">Nombre</th>
+                                            <td><span id="añadir-info-nombre"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-dark text-light" scope="row">Descripción</th>
+                                            <td><span id="añadir-info-descripcion"></span></td>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-dark text-light" scope="row">Precio</th>
+                                            <td><span id="añadir-info-precio"></span> €</td>
+                                        </tr>
+                                        <tr>
+                                            <th class="bg-dark text-light" scope="row">Duración</th>
+                                            <td><span id="añadir-info-duracion"></span> minutos</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </div>
 
                         </div>

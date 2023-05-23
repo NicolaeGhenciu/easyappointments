@@ -39,6 +39,7 @@ class ServicioController extends Controller
             'nombre' => 'required|min:3|max:100',
             'descripcion' => 'required|min:3|max:100',
             'precio' => 'required|numeric',
+            'duracion' => 'required|numeric',
         ]);
 
         $datos['id_empresa'] = Auth::user()->empresa_id;
@@ -82,6 +83,7 @@ class ServicioController extends Controller
             'nombre' => 'required|min:3|max:100',
             'descripcion' => 'required|min:3|max:100',
             'precio' => 'required|numeric',
+            'duracion' => 'required|numeric',
         ]);
 
         $servicio->update($datos);
