@@ -219,7 +219,60 @@ class UserController extends Controller
 
         return back();
     }
+
+    public function recuperarContraseña()
+    {
+        session()->flash('recuperar');
+
+        $datos = request()->validate([
+            'nif_cif' => 'required|min:6|max:100',
+            'email' => 'required|email',
+        ]);
+
+        $user = User::where('email', $datos['email'])->first();
+
+        if (!$user) {
+            session()->flash('error-recuperar', 'No se ha encontrado ningún usuario con el correo electrónico proporcionado.');
+            return back();
+        }
+
+        $pass = PasswordGenerator::generatePass();
+
+        $email = "nicoadrianx42x@gmail.com";
+
+        $datos['password'] = Hash::make($pass);
+
+        if ($user->empresa_id) {
+            $model = Empresa::where('cif', $datos['nif_cif'])
+                ->where('id_empresa', $user->empresa_id)
+                ->first();
+        } elseif ($user->empleado_id) {
+            $model = Empleado::where('nif', $datos['nif_cif'])
+                ->where('id_empleado', $user->empleado_id)
+                ->first();
+        } elseif ($user->cliente_id) {
+            $model = Cliente::where('nif', $datos['nif_cif'])
+                ->where('id_cliente', $user->cliente_id)
+                ->first();
+        }
+
+        if ($model) {
+            unset($datos['email'], $datos['nif_cif']);
+            $user->update($datos);
+            Mail::send('email.recuperar.recuperar', ['pass' => $pass, 'nombre' => $model->nombre, 'apellidos' => $model->apellidos ?? ''], function ($message) use ($email) {
+                $message->from('easyappointments@empresa.com', 'Easyappointments')
+                    ->to($email)
+                    ->subject('Nueva contraseña, EasyAppointments');
+            });
+            session()->flash('message-recuperar', 'Tu contraseña ha sido cambiada exitosamente. La nueva contraseña te ha sido enviada a tu correo electrónico.');
+            return back();
+        }
+
+        session()->flash('error-recuperar', 'No se ha encontrado ningún usuario con el nif/cif proporcionado.');
+        return back();
+    }
 }
+
 
 function emailExists($email)
 {

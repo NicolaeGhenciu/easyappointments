@@ -32,6 +32,9 @@ Route::post('crearUsuarioEmpresa', [UserController::class, 'crearUsuarioEmpresa'
 // Dar de alta a un cliente
 Route::post('crearUsuarioCliente', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
 
+// Dar de alta a un cliente
+Route::post('recuperarContraseña', [UserController::class, 'recuperarContraseña'])->name('recuperarContraseña');
+
 //Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 

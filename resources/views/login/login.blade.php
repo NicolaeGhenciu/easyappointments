@@ -83,7 +83,7 @@
                 </svg>&nbsp;EasyAppointments</h3>
 
             <form id="login-form" action="{{ route('login') }}" method="post"
-                @if (old('role') === 'empresa' || old('role') === 'cliente') style="display: none" @endif>
+                @if (old('role') === 'empresa' || old('role') === 'cliente' || session()->get('recuperar')) style="display: none" @endif>
                 @csrf
 
                 <hr>
@@ -125,7 +125,8 @@
 
                 <div class="d-grid">
                     <button class="btn btn-primary" type="submit">Iniciar sesión</button>
-                    <a href="" class="btn btn-warning mt-1" type="submit">¿Has olvidado tu
+                    <a class="btn btn-warning mt-1" onclick="showRecuperarPassword()">¿Has
+                        olvidado tu
                         contraseña? <i class="bi bi-key-fill"></i> </a>
                     <a class="btn btn-info mt-1" onclick="showRegisterForm()">¿No tienes
                         cuenta? <i class="bi bi-person-fill-add"></i></a>
@@ -162,8 +163,7 @@
                 <div class="d-flex justify-content-center">
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                         <button type="button" class="btn btn-primary" onclick="showRegisterCliente()">Cliente</button>
-                        <button type="button" class="btn btn-warning"
-                            onclick="showRegisterEmpresa()">Empresa</button>
+                        <button type="button" class="btn btn-warning" onclick="showRegisterEmpresa()">Empresa</button>
                     </div>
                 </div>
             </div>
@@ -440,6 +440,68 @@
 
                     <div class="d-grid">
                         <button class="btn btn-primary" type="submit">Crear cuenta</button>
+                    </div>
+
+                </form>
+
+                <div class="d-grid">
+                    <a class="btn btn-info mt-1" onclick="showLoginForm()">Iniciar sesión</a>
+                </div>
+
+            </div>
+
+            <div id="recuperar-form"
+                @if (session()->get('recuperar')) style="display:block;" @else style="display:none;" @endif>
+
+                @if (session()->has('error-recuperar'))
+                    <div class="alert alert-danger">
+                        {{ session()->get('error-recuperar') }}
+                    </div>
+                @endif
+
+                @if (session()->has('message-recuperar'))
+                    <div class="alert alert-success">
+                        {{ session()->get('message-recuperar') }}
+                    </div>
+                @endif
+
+                <form action="{{ route('recuperarContraseña') }}" method="post">
+                    @csrf
+                    <hr>
+                    <h5 class="text-center">Recuperar contraseña</h5>
+                    <hr>
+                    <div class="row mb-3">
+
+                        <div class="col">
+                            <label class="form-label">NIF o CIF:</label>
+                            <input type="text" class="form-control border border-primary" name="nif_cif"
+                                value="{{ old('nif_cif') }}">
+                            @if ($errors->has('nif_cif') && session()->get('recuperar'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('nif_cif', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
+                        </div>
+                    </div>
+
+                    <div class="row mb-3">
+
+                        <div class="col">
+                            <label class="form-label">Email:</label>
+                            <input type="email" class="form-control border border-primary" name="email"
+                                value="{{ old('email') }}">
+                            @if ($errors->has('email') && session()->get('recuperar'))
+                                <div class="alert alert-danger mt-1">
+                                    {!! $errors->first('email', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                </div>
+                            @endif
+                        </div>
+
+                    </div>
+
+                    <div class="d-grid">
+                        <button class="btn btn-primary" type="submit">Recuperar contraseña<i
+                                class="bi bi-key-fill"></i></button>
                     </div>
 
                 </form>

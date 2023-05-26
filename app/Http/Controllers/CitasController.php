@@ -7,6 +7,7 @@ use App\Models\Cliente;
 use App\Models\Disponibilidad_Empleado;
 use App\Models\Empleado;
 use App\Models\Servicio;
+use DateTime;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 
@@ -68,8 +69,8 @@ class CitasController extends Controller
         // Verificar si existe alguna otra cita no eliminada y confirmada en esa fecha y hora
         $existeCita = Cita::where('id_empleado', Auth::user()->empleado_id)
             ->where('id_empresa', $empleadoDatos->id_empresa)
-            ->where('fecha_inicio', '<=', $timestampFin)
-            ->where('fecha_fin', '>=', $timestampInicio)
+            ->where('fecha_inicio', '<', $timestampFin)
+            ->where('fecha_fin', '>', $timestampInicio)
             ->whereNull('deleted_at') // Verificar que no esté borrada (soft delete)
             ->where('status', ['Confirmada', 'Pendiente']) // Verificar que esté confirmada
             ->exists();
@@ -85,7 +86,11 @@ class CitasController extends Controller
             ->where('id_empleado', Auth::user()->empleado_id)
             ->first();
 
-        if (!$disponibilidadDia || $datos['hora'] < $disponibilidadDia->hora_inicio || $datos['hora'] > $disponibilidadDia->hora_fin) {
+        $horaCita = DateTime::createFromFormat('H:i', $datos['hora']);
+        $horaInicio = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_inicio);
+        $horaFin = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_fin);
+
+        if (!$disponibilidadDia || $horaCita < $horaInicio || $horaCita > $horaFin) {
             session()->flash('error', 'La hora de la cita está fuera del horario disponible del trabajador');
             return back();
         }
