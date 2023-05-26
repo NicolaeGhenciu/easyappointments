@@ -6,10 +6,14 @@ use App\Models\Cita;
 use App\Models\Cliente;
 use App\Models\Disponibilidad_Empleado;
 use App\Models\Empleado;
+use App\Models\Empresa;
 use App\Models\Servicio;
+use App\Models\User;
 use DateTime;
+use PDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class CitasController extends Controller
 {
@@ -21,6 +25,13 @@ class CitasController extends Controller
             ->where('id_empleado', Auth::user()->empleado_id)
             ->whereNull('deleted_at')
             ->get();
+
+        $citasConfirmadas = Cita::where('id_empresa', $empleado->id_empresa)
+            ->where('id_empleado', Auth::user()->empleado_id)
+            ->where('status', 'Confirmada')
+            ->whereNull('deleted_at')
+            ->get();
+
 
         $clientes = Cliente::whereIn('id_cliente', function ($query) use ($empleado) {
             $query->select('id_cliente')
@@ -37,7 +48,7 @@ class CitasController extends Controller
             ->whereNull('deleted_at')
             ->get();
 
-        return view('cita.agendaEmpleado', ['citas' => $citas, 'clientes' => $clientes, 'servicios' => $servicios, 'disponibilidad' => $disponibilidad]);
+        return view('cita.agendaEmpleado', ['citas' => $citas, 'citasConfirmadas' => $citasConfirmadas, 'clientes' => $clientes, 'servicios' => $servicios, 'disponibilidad' => $disponibilidad]);
     }
 
     public function nuevaCitaE()
@@ -62,7 +73,7 @@ class CitasController extends Controller
         $timestampInicio = date('Y-m-d H:i:s', $timestamp);
 
         // Sumar 40 minutos al timestamp
-        $nuevoTimestamp = strtotime('+40 minutes', $timestamp);
+        $nuevoTimestamp = strtotime("+" . $servicio['duracion'] . " minutes", $timestamp);
 
         $timestampFin = date('Y-m-d H:i:s', $nuevoTimestamp);
 
@@ -105,8 +116,36 @@ class CitasController extends Controller
             'status' => "Confirmada",
         ]);
 
+        $pdf = PDF::loadView('pdf.cita');
+
+        $pdf_content = $pdf->output();
+
+        $cliente = Cliente::where('id_cliente', $datos['cliente_id'])
+            ->first();
+
+        $asunto = "Cita" . $servicio['cod'] . " - $cliente->nif";
+        $email = "nicoadrianx42x@gmail.com";
+
+        Mail::send('email.citaPDF', ['cita' => $cita, 'asunto' => $asunto, 'cliente' => $cliente], function ($message) use ($email, $pdf_content, $asunto) {
+            $message->from('easyappointments@empresa.com', 'Easyappointments');
+            $message->to($email)
+                ->subject($asunto)
+                ->attachData($pdf_content, "$asunto.pdf");
+        });
+
         session()->flash('message', 'Cita programada correctamente.');
 
         return back();
+    }
+
+    public function generarCitaPdf($id)
+    {
+        $cita = Cita::where('id_cita', $id)
+            ->whereNull('deleted_at') // Verificar que no esté borrada (soft delete)
+            ->first();
+
+        $pdf = PDF::loadView('pdf.cita', compact('cita'));
+
+        return $pdf->download('Cita-' . $cita->servicio->cod . '-' . $cita->cliente->nif . '.pdf');
     }
 }

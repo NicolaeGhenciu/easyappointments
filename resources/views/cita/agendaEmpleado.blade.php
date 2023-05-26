@@ -40,7 +40,7 @@
                 initialDate: new Date(new Date().getTime() - (new Date().getTimezoneOffset() * 60000))
                     .toISOString().slice(0, 10),
                 navLinks: true,
-                editable: true,
+                editable: false,
                 dayMaxEvents: true,
                 events: [
                     //recogida de datos
@@ -75,6 +75,11 @@
                     var servicio = obtenerPropiedadDeEvento(info.event, 'servicio');
                     var cliente = obtenerPropiedadDeEvento(info.event, 'cliente');
 
+                    // cambiar id de descarga pdf
+                    var url = "{{ route('citaPDF', ['id' => ':idcita']) }}";
+                    url = url.replace(':idcita', info.event.extendedProps.id);
+                    $('#descargarPDF').attr('href', url);
+
                     // poner los datos en el modal
                     $('#detalles_nombre_empresa').text(empresa.nombre);
                     $('#detalles_cif').text(empresa.cif);
@@ -92,7 +97,7 @@
                     $('#detalles_fecha_fin').text(obtenerFechaFormateada(info.event.end));
                     $('#detalles_estado').text(info.event.extendedProps.status);
 
-                    //mostrar el modal y ocultar los popover de full calendar
+                    // mostrar el modal y ocultar los popover de full calendar
                     $('#detallesModal').modal('show');
                     $('.fc-popover').hide();
                 }
@@ -341,7 +346,7 @@
             <div class="col-auto">
                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Programar una nueva cita">
                     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"
-                        data-disponibilidad="{{ $disponibilidad }}" data-citas="{{ $citas }}">
+                        data-disponibilidad="{{ $disponibilidad }}" data-citas="{{ $citasConfirmadas }}">
                         <i class="bi bi-calendar-plus-fill"></i></a></span>
             </div>
             <div class="col text-center">
@@ -375,8 +380,12 @@
     <div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
-                <div class="modal-header bg-info text-white">
-                    <h5 class="modal-title" id="detallesModalLabel"><b>Detalles de la cita</b></h5>
+                <div class="modal-header bg-info">
+                    <h5 class="modal-title" id="detallesModalLabel">
+                        <a id="descargarPDF" href="" class="btn btn-danger">
+                            <i class="bi bi-filetype-pdf"></i></a>&nbsp;
+                        <b>Detalles de la cita</b>
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
@@ -455,7 +464,8 @@
 
                 </div>
                 <div class="modal-footer">
-                    <button type="submit" class="btn btn-danger mr-auto">Borrar</button>
+                    <button type="submit" class="btn btn-danger mr-auto">Cancelar <i
+                            class="bi bi-calendar-x-fill"></i></button>
                     <button type="submit" class="btn btn-warning">Modificar</button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
@@ -562,9 +572,7 @@
                                     </tbody>
                                 </table>
                             </div>
-
                         </div>
-
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>

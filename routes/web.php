@@ -110,4 +110,10 @@ Route::middleware(['auth'])->group(function () {
         //Programar una nueva cita
         Route::post('/nuevaCitaE', [CitasController::class, 'nuevaCitaE'])->name('nuevaCitaE');
     });
+
+    Route::middleware(['checkRole:empresa,empleado,cliente'])->group(function () {
+
+        // --- Citas
+        Route::get('/citaPDF/{id}', [CitasController::class, 'generarCitaPdf'])->name('citaPDF');
+    });
 });
