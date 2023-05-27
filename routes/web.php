@@ -109,6 +109,8 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/agendaEmpleado', [CitasController::class, 'agendaEmpleado'])->name('agendaEmpleado');
         //Programar una nueva cita
         Route::post('/nuevaCitaE', [CitasController::class, 'nuevaCitaE'])->name('nuevaCitaE');
+        //Modificar una cita
+        Route::post('/modificarCitaE/{id}', [CitasController::class, 'modificarCitaE'])->name('modificarCitaE');
     });
 
     Route::middleware(['checkRole:empresa,empleado,cliente'])->group(function () {

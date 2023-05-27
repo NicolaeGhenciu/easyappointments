@@ -116,7 +116,7 @@ class CitasController extends Controller
             'status' => "Confirmada",
         ]);
 
-        $pdf = PDF::loadView('pdf.cita');
+        $pdf = PDF::loadView('pdf.cita', compact('cita'));
 
         $pdf_content = $pdf->output();
 
@@ -147,5 +147,119 @@ class CitasController extends Controller
         $pdf = PDF::loadView('pdf.cita', compact('cita'));
 
         return $pdf->download('Cita-' . $cita->servicio->cod . '-' . $cita->cliente->nif . '.pdf');
+    }
+
+    public function modificarCitaE($id)
+    {
+        $empleadoDatos = Empleado::where('id_empleado', Auth::user()->empleado_id)->first();
+
+        session()->flash('modificar');
+
+        $datos = request()->validate([
+            'cliente_id' => 'required',
+            'estado' => 'required',
+            'servicio_obj' => 'required',
+            'fecha' => 'required',
+            'hora' => 'required',
+            'modificarFechayHora' => '',
+        ]);
+
+        $servicio = json_decode($datos['servicio_obj'], true);
+
+        if ($datos['modificarFechayHora'] == 'si') {
+
+            // Crear un timestamp a partir de la fecha y hora
+            $timestamp = strtotime($datos['fecha'] . ' ' . $datos['hora']);
+
+            // Formatear el timestamp según tus necesidades
+            $timestampInicio = date('Y-m-d H:i:s', $timestamp);
+
+            // Sumar 40 minutos al timestamp
+            $nuevoTimestamp = strtotime("+" . $servicio['duracion'] . " minutes", $timestamp);
+
+            $timestampFin = date('Y-m-d H:i:s', $nuevoTimestamp);
+
+            $cita = Cita::where('id_cita', $id)
+                ->whereNull('deleted_at')
+                ->first();
+
+
+            // Verificar si existe alguna otra cita no eliminada y confirmada en esa fecha y hora
+            $existeCita = Cita::where('id_empleado', Auth::user()->empleado_id)
+                ->where('id_empresa', $empleadoDatos->id_empresa)
+                ->where('fecha_inicio', '<', $timestampFin)
+                ->where('fecha_fin', '>', $timestampInicio)
+                ->whereNull('deleted_at') // Verificar que no esté borrada (soft delete)
+                ->where('status', ['Confirmada', 'Pendiente']) // Verificar que esté confirmada
+                ->exists();
+
+            if ($existeCita) {
+                session()->flash('error', 'No es posible confirmar la cita, ya que hay otra cita programada para ese horario.');
+                return back();
+            }
+
+            $diaSemanaCita = date('w', $timestamp);
+
+            $disponibilidadDia = Disponibilidad_Empleado::where('dia_semana', $diaSemanaCita)
+                ->where('id_empleado', Auth::user()->empleado_id)
+                ->first();
+
+            $horaCita = DateTime::createFromFormat('H:i', $datos['hora']);
+            $horaInicio = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_inicio);
+            $horaFin = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_fin);
+
+            if (!$disponibilidadDia || $horaCita < $horaInicio || $horaCita > $horaFin) {
+                session()->flash('error', 'La hora de la cita está fuera del horario disponible del trabajador');
+                return back();
+            }
+
+            $cita = Cita::where('id_cita', $id)
+                ->whereNull('deleted_at'); // Verificar que no esté borrada (soft delete);
+
+            $cita->update([
+                'id_cliente' => $datos['cliente_id'],
+                'id_empleado' => Auth::user()->empleado_id,
+                'id_servicio' => data_get($servicio, 'id_servicio'),
+                'fecha_inicio' => $timestampInicio,
+                'fecha_fin' => $timestampFin,
+                'status' => $datos['estado'],
+            ]);
+        } else {
+
+            $cita = Cita::where('id_cita', $id)
+                ->whereNull('deleted_at'); // Verificar que no esté borrada (soft delete);
+
+            $cita->update([
+                'id_cliente' => $datos['cliente_id'],
+                'id_empleado' => Auth::user()->empleado_id,
+                'id_servicio' => data_get($servicio, 'id_servicio'),
+                'status' => $datos['estado'],
+            ]);
+        }
+
+        $cita = Cita::where('id_cita', $id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        $pdf = PDF::loadView('pdf.cita', compact('cita'));
+
+        $pdf_content = $pdf->output();
+
+        $cliente = Cliente::where('id_cliente', $datos['cliente_id'])
+            ->first();
+
+        $asunto = "Cita" . $servicio['cod'] . " - $cliente->nif";
+        $email = "nicoadrianx42x@gmail.com";
+
+        Mail::send('email.citaModificadaPDF', ['cita' => $cita, 'asunto' => $asunto, 'cliente' => $cliente], function ($message) use ($email, $pdf_content, $asunto) {
+            $message->from('easyappointments@empresa.com', 'Easyappointments');
+            $message->to($email)
+                ->subject($asunto)
+                ->attachData($pdf_content, "$asunto.pdf");
+        });
+
+        session()->flash('message', "Cita $asunto modificada correctamente.");
+
+        return back();
     }
 }

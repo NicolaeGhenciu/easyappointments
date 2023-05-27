@@ -167,16 +167,6 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::check() && Auth::user()->role == 'empleado' || Auth::user()->role == 'empresa')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
-                                    aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
-                                    href="{{ route('agendaEmpleado') }}">
-                                    <i class="bi bi-calendar-week-fill"></i>
-                                    <span class="ml-2">Agenda</span>
-                                </a>
-                            </li>
-                        @endif
                         @if ((Auth::check() && Auth::user()->role == 'empleado') || Auth::user()->role == 'empresa')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('listarClientes') ? 'active' : '' }}"
@@ -184,6 +174,16 @@
                                     href="{{ route('listarClientes') }}">
                                     <i class="bi bi-person-video2"></i></i>
                                     <span class="ml-2">Gestionar Clientes</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
+                                    href="{{ route('agendaEmpleado') }}">
+                                    <i class="bi bi-calendar-week-fill"></i>
+                                    <span class="ml-2">Agenda</span>
                                 </a>
                             </li>
                         @endif

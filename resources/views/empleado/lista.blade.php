@@ -236,11 +236,10 @@
                                         data-empleado="{{ $empleado }}">
                                         <i class="bi bi-trash-fill"></i></a></span>
                         </td>
-    </div>
-    </tr>
-    @endforeach
-    </tbody>
-    </table>
+                    </tr>
+                @endforeach
+            </tbody>
+        </table>
     </div>
 
     <div id="centrar">
