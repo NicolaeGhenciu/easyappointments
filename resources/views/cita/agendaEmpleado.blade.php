@@ -11,6 +11,7 @@
     <script src="{{ asset('js/fullcalendar@6.1.6.js') }}"></script>
 
     <script>
+        var idCitaModificar = 0;
         document.addEventListener('DOMContentLoaded', function() {
             var calendarEl = document.getElementById('calendar');
 
@@ -78,7 +79,9 @@
                     var empleado = obtenerPropiedadDeEvento(info.event, 'empleado');
                     var servicio = obtenerPropiedadDeEvento(info.event, 'servicio');
                     var cliente = obtenerPropiedadDeEvento(info.event, 'cliente');
-                    $('#boton-modificar-cita').attr('data-cita-unica', info.event.extendedProps.id);
+                    //$('#boton-modificar-cita').attr('data-cita-unica', "");
+                    //$('#boton-modificar-cita').attr('data-cita-unica', info.event.extendedProps.id);
+                    idCitaModificar = info.event.extendedProps.id;
 
                     // cambiar id de descarga pdf
                     var url = "{{ route('citaPDF', ['id' => ':idcita']) }}";
@@ -198,7 +201,6 @@
                     var servicioObjetoMod = JSON.parse(servicioSeleccionadoMod);
 
                     var nombreSelect = "select_hora_mod";
-                    console.log("hola")
                     //llamamos a la funcion
                     actualizarSelectHora(fechaSeleccionadaMod, servicioObjetoMod, disponibilidad, citas,
                         nombreSelect)
@@ -336,16 +338,16 @@
         }
 
         function modificar() {
-            var id = $('#boton-modificar-cita').data('cita-unica');
+            let id = idCitaModificar;
             var boton = $('#boton-modificar-cita');
             var citas = boton.data('citas-all');
             var cita = citas.find(function(cita) {
-                return cita.id_cita === id;
+                return cita.id_cita == id;
             });
             $('#titulo_mod').text(" - " + cita.servicio.cod + "-" + cita.cliente.nif)
             $("#cliente_id_mod option[value='" + cita.id_cliente + "']").prop('selected', true);
             $("#estado option[value='" + cita.status + "']").prop('selected', true);
-            $("#servicio_obj_mod option[value='" + JSON.stringify(cita.servicio) + "']").prop('selected', true);
+            $("#servicio_obj_mod option[id='" + cita.servicio.id_servicio + "']").prop('selected', true);
             var partes = cita.fecha_inicio.split(" ");
 
             $("#fecha_mod").val(partes[0]);
@@ -713,7 +715,7 @@
                                 <select class="form-select" name="servicio_obj" id="servicio_obj_mod">
                                     <option value="" disabled selected>Seleccione un servicio</option>
                                     @foreach ($servicios as $servicio)
-                                        <option value="{{ $servicio }}"
+                                        <option id="{{ $servicio->id_servicio }}" value="{{ $servicio }}"
                                             {{ old('servicio_obj') == $servicio->id_servicio ? 'selected' : '' }}>
                                             {{ $servicio->cod }} - {{ $servicio->nombre }}</option>
                                     @endforeach
