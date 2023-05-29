@@ -32,13 +32,13 @@ Route::post('crearUsuarioEmpresa', [UserController::class, 'crearUsuarioEmpresa'
 // Dar de alta a un cliente
 Route::post('crearUsuarioCliente', [UserController::class, 'crearUsuarioCliente'])->name('crearUsuarioCliente');
 
-// Dar de alta a un cliente
+// Recuperar la contraseña de una cuenta
 Route::post('recuperarContraseña', [UserController::class, 'recuperarContraseña'])->name('recuperarContraseña');
 
 //Logout
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
-//Peticion JSON
+//Peticion JSON para los municipios
 Route::get('/municipiosPorProvincia/{provincia_id}', [MunicipioController::class, 'municipiosPorProvincia']);
 
 //-- Aqui no dejamos acceder a no ser que se haya logueado.
@@ -84,9 +84,15 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
 
         // --- Citas
-
+        //Ver la agenda mensual, semanal y diaria del empleado
+        Route::get('/agendaEmpleadoEmpresa/{id}', [CitasController::class, 'agendaEmpleadoEmpresa'])->name('agendaEmpleadoEmpresa');
+        //Programar una nueva cita
+        Route::post('/nuevaCitaE_Empresa/{id}', [CitasController::class, 'nuevaCitaE_Empresa'])->name('nuevaCitaE_Empresa');
+        //Modificar una cita
+        Route::post('/modificarCitaE_Empresa/{id}/{idEmpleado}', [CitasController::class, 'modificarCitaE_Empresa'])->name('modificarCitaE_Empresa');
     });
 
+    //Rol Empresa y Empleado
     Route::middleware(['checkRole:empresa,empleado'])->group(function () {
 
         // --- Clientes
@@ -113,6 +119,7 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/modificarCitaE/{id}', [CitasController::class, 'modificarCitaE'])->name('modificarCitaE');
     });
 
+    //Rol Empresa, Empleado y Cliente
     Route::middleware(['checkRole:empresa,empleado,cliente'])->group(function () {
 
         // --- Citas

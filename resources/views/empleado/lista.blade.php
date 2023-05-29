@@ -202,6 +202,7 @@
                     <th scope="col">Provincia</th>
                     <th scope="col">Municipio</th>
                     <th scope="col">Servicios</th>
+                    <th scope="col">Agenda</th>
                     <th scope="col">Opciones</th>
                 </tr>
             </thead>
@@ -219,6 +220,12 @@
                                 <a class="btn btn-dark"
                                     href="{{ route('serviciosEmpleado', ['id' => $empleado->id_empleado]) }}">
                                     <i class="bi bi-bag-fill"></i></a></span>
+                        </td>
+                        <td>
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Agenda">
+                                <a class="btn btn-dark"
+                                    href="{{ route('agendaEmpleadoEmpresa', ['id' => $empleado->id_empleado]) }}">
+                                    <i class="bi bi-calendar-week-fill"></i></a></span>
                         </td>
                         <td>
                             <div class="btn-group btn-group-md gap-1">
