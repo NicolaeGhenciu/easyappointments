@@ -117,5 +117,10 @@ Route::middleware(['auth'])->group(function () {
 
         // --- Citas
         Route::get('/citaPDF/{id}', [CitasController::class, 'generarCitaPdf'])->name('citaPDF');
+
+        // --- Mi cuenta
+        Route::get('/miCuenta', [UserController::class, 'miCuenta'])->name('miCuenta');
+        // --- Cambiar contraseña de un usuario
+        Route::post('/cambiarPass', [UserController::class, 'cambiarPass'])->name('cambiarPass');
     });
 });

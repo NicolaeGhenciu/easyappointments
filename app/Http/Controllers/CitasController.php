@@ -159,14 +159,21 @@ class CitasController extends Controller
             'cliente_id' => 'required',
             'estado' => 'required',
             'servicio_obj' => 'required',
-            'fecha' => 'required',
-            'hora' => 'required',
             'modificarFechayHora' => '',
         ]);
 
         $servicio = json_decode($datos['servicio_obj'], true);
 
         if ($datos['modificarFechayHora'] == 'si') {
+
+            $datos = request()->validate([
+                'cliente_id' => 'required',
+                'estado' => 'required',
+                'servicio_obj' => 'required',
+                'fecha' => 'required',
+                'hora' => 'required',
+                'modificarFechayHora' => '',
+            ]);
 
             // Crear un timestamp a partir de la fecha y hora
             $timestamp = strtotime($datos['fecha'] . ' ' . $datos['hora']);

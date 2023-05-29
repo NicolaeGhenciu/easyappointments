@@ -129,7 +129,8 @@
                     {{ Auth::user()->nombre }}
                 </button>
                 <ul class="dropdown-menu dropdown-menu-right" aria-labelledby="dropdownMenuButton">
-                    <li><a class="dropdown-item" href="#"><i class="bi bi-person-fill-gear"></i></i> Mi cuenta</a>
+                    <li><a class="dropdown-item" href="{{ route('miCuenta') }}"><i
+                                class="bi bi-person-fill-gear"></i></i> Mi cuenta</a>
                     </li>
                     <li><a class="dropdown-item" href="#" id="logout-link"><i class="bi bi-door-closed-fill"></i>
                             Cerrar sesión</a></li>

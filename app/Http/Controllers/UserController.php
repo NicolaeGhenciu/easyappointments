@@ -271,6 +271,51 @@ class UserController extends Controller
         session()->flash('error-recuperar', 'No se ha encontrado ningún usuario con el nif/cif proporcionado.');
         return back();
     }
+
+    public function miCuenta()
+    {
+        if (Auth::user()->role == 'empresa') {
+            $empresa = Empresa::where('id_empresa', (Auth::user()->empresa_id))
+                ->first();
+            return view('cuenta.miCuenta', ['empresa' => $empresa]);
+        }
+        if (Auth::user()->role == 'empleado') {
+            $empleado = Empleado::where('id_empleado', (Auth::user()->empleado_id))
+                ->first();
+            return view('cuenta.miCuenta', ['empleado' => $empleado]);
+        }
+        if (Auth::user()->role == 'cliente') {
+            $cliente = Cliente::where('id_cliente', (Auth::user()->cliente_id))
+                ->first();
+            return view('cuenta.miCuenta', ['cliente' => $cliente]);
+        }
+    }
+
+    public function cambiarPass()
+    {
+        session()->flash('cambiar');
+
+        $datos = request()->validate([
+            'pass' => 'required|min:6|max:15|regex:/^[^,]*$/',
+            'pass2' => 'required|min:6|max:15|regex:/^[^,]*$/',
+        ]);
+
+        if ($datos['pass'] != $datos['pass2']) {
+            session()->flash('error', 'Las contraseñas no coinciden');
+            return back();
+        }
+
+        $pass = Hash::make($datos['pass']);
+
+        $user = User::where('id', Auth::user()->id)->first();
+        $user->update([
+            'password' => $pass,
+        ]);
+
+        session()->forget('cambiar');
+        session()->flash('message', 'Tu contraseña ha sido cambiada exitosamente.');
+        return back();
+    }
 }
 
 

@@ -22,4 +22,14 @@ class Empresa extends Model
         'provincia_id',
         'municipio_id'
     ];
+
+    public function provincia()
+    {
+        return $this->belongsTo('App\Models\Provincia', 'provincia_id', 'id');
+    }
+
+    public function municipio()
+    {
+        return $this->belongsTo('App\Models\Municipio', 'municipio_id', 'id');
+    }
 }
