@@ -265,7 +265,7 @@ class CitasController extends Controller
                 ->attachData($pdf_content, "$asunto.pdf");
         });
 
-        session()->flash('message', "Cita $asunto modificada correctamente.");
+        session()->flash('message', "$asunto modificada correctamente.");
 
         return back();
     }
@@ -507,7 +507,7 @@ class CitasController extends Controller
                 ->attachData($pdf_content, "$asunto.pdf");
         });
 
-        session()->flash('message', "Cita $asunto modificada correctamente.");
+        session()->flash('message', "$asunto modificada correctamente.");
 
         return back();
     }
