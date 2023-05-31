@@ -177,6 +177,14 @@
                 $("#tablaDatosServicios").fadeIn(200);
             });
 
+            $('#modificarFechayHora').change(function() {
+                if ($(this).val() === 'no') {
+                    $("#fecha_y_hora").fadeOut(200, function() {});
+                } else {
+                    $("#fecha_y_hora").fadeIn(200, function() {});
+                }
+            });
+
             fechaInput.on('change', obtenerDisponibilidad);
             fechaInputMod.on('change', obtenerDisponibilidad);
 
@@ -751,32 +759,32 @@
                                 </select>
                             </div>
                         </div>
+                        <div id="fecha_y_hora">
+                            <div class="row mb-3">
+                                <div class="col">
+                                    <label class="form-label">Fecha:</label>
+                                    <input type="date" class="form-control border border-primary" name="fecha"
+                                        id="fecha_mod"
+                                        @if (old('fecha_mod') && session()->get('modificar')) value="{{ old('fecha_mod') }}" @endif>
+                                    @if ($errors->has('fecha') && session()->get('modificar'))
+                                        <div class="alert alert-danger mt-1" id="error-validacion">
+                                            {!! $errors->first('fecha', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                        </div>
+                                    @endif
+                                </div>
 
-                        <div class="row mb-3">
-                            <div class="col">
-                                <label class="form-label">Fecha:</label>
-                                <input type="date" class="form-control border border-primary" name="fecha"
-                                    id="fecha_mod"
-                                    @if (old('fecha_mod') && session()->get('modificar')) value="{{ old('fecha_mod') }}" @endif>
-                                @if ($errors->has('fecha') && session()->get('modificar'))
-                                    <div class="alert alert-danger mt-1" id="error-validacion">
-                                        {!! $errors->first('fecha', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
-                                    </div>
-                                @endif
+                                <div class="col">
+                                    <label for="hora" class="form-label">Hora:</label>
+                                    <select class="form-select" name="hora" id="select_hora_mod">
+                                        <option value="" disabled selected>Seleccione una hora</option>
+                                    </select>
+                                    @if ($errors->has('hora') && session()->get('modificar'))
+                                        <div class="alert alert-danger mt-1" id="error-validacion">
+                                            {!! $errors->first('hora', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
+                                        </div>
+                                    @endif
+                                </div>
                             </div>
-
-                            <div class="col">
-                                <label for="hora" class="form-label">Hora:</label>
-                                <select class="form-select" name="hora" id="select_hora_mod">
-                                    <option value="" disabled selected>Seleccione una hora</option>
-                                </select>
-                                @if ($errors->has('hora') && session()->get('modificar'))
-                                    <div class="alert alert-danger mt-1" id="error-validacion">
-                                        {!! $errors->first('hora', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
-                                    </div>
-                                @endif
-                            </div>
-
 
                             <div class="table-responsive mt-3" style="display:none;" id="tablaDatosServiciosMod">
                                 <table class="table table-striped">

@@ -3,6 +3,7 @@
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\CitasController;
 use App\Http\Controllers\ClienteController;
+use App\Http\Controllers\DisponibilidadEmpleadoController;
 use App\Http\Controllers\EmpleadoController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ServicioController;
@@ -84,12 +85,24 @@ Route::middleware(['auth'])->group(function () {
         Route::delete('/borrarServicio/{id}', [ServicioController::class, 'borrar'])->name('borrarServicio');
 
         // --- Citas
+
         //Ver la agenda mensual, semanal y diaria del empleado
         Route::get('/agendaEmpleadoEmpresa/{id}', [CitasController::class, 'agendaEmpleadoEmpresa'])->name('agendaEmpleadoEmpresa');
         //Programar una nueva cita
         Route::post('/nuevaCitaE_Empresa/{id}', [CitasController::class, 'nuevaCitaE_Empresa'])->name('nuevaCitaE_Empresa');
         //Modificar una cita
         Route::post('/modificarCitaE_Empresa/{id}/{idEmpleado}', [CitasController::class, 'modificarCitaE_Empresa'])->name('modificarCitaE_Empresa');
+
+        // --- Horarios
+
+        //Listar
+        Route::get('/listarHorario/{id}', [DisponibilidadEmpleadoController::class, 'listar'])->name('listarHorario');
+        //Programar un nuevo horario
+        Route::post('/programarHorario/{id}/{dia}', [DisponibilidadEmpleadoController::class, 'programar'])->name('programarHorario');
+        //Modificar un horario
+        Route::put('/modificarHorario/{id}', [DisponibilidadEmpleadoController::class, 'modificar'])->name('modificarHorario');
+        //Eliminar un horario
+        Route::delete('/borrarHorario/{id}', [DisponibilidadEmpleadoController::class, 'borrar'])->name('borrarHorario');
     });
 
     //Rol Empresa y Empleado
@@ -117,6 +130,11 @@ Route::middleware(['auth'])->group(function () {
         Route::post('/nuevaCitaE', [CitasController::class, 'nuevaCitaE'])->name('nuevaCitaE');
         //Modificar una cita
         Route::post('/modificarCitaE/{id}', [CitasController::class, 'modificarCitaE'])->name('modificarCitaE');
+
+        // --- Horarios
+
+        //Listar
+        Route::get('/horarioEmpleado', [DisponibilidadEmpleadoController::class, 'listarEmpleado'])->name('horarioEmpleado');
     });
 
     //Rol Empresa, Empleado y Cliente

@@ -180,6 +180,16 @@
                         @endif
                         @if (Auth::check() && Auth::user()->role == 'empleado')
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('horarioEmpleado') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('horarioEmpleado') }}" aria-current="page"
+                                    href="{{ route('horarioEmpleado') }}">
+                                    <i class="bi bi-hourglass-split"></i>
+                                    <span class="ml-2">Horarios</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
                                     aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
                                     href="{{ route('agendaEmpleado') }}">

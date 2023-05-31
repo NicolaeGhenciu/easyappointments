@@ -202,6 +202,7 @@
                     <th scope="col">Provincia</th>
                     <th scope="col">Municipio</th>
                     <th scope="col">Servicios</th>
+                    <th scope="col">Horario</th>
                     <th scope="col">Agenda</th>
                     <th scope="col">Opciones</th>
                 </tr>
@@ -222,8 +223,14 @@
                                     <i class="bi bi-bag-fill"></i></a></span>
                         </td>
                         <td>
+                            <span data-bs-toggle="tooltip" data-bs-placement="top" title="Horario">
+                                <a class="btn btn-primary"
+                                    href="{{ route('listarHorario', ['id' => $empleado->id_empleado]) }}">
+                                    <i class="bi bi-hourglass-split"></i></a></span>
+                        </td>
+                        <td>
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Agenda">
-                                <a class="btn btn-dark"
+                                <a class="btn btn-secondary"
                                     href="{{ route('agendaEmpleadoEmpresa', ['id' => $empleado->id_empleado]) }}">
                                     <i class="bi bi-calendar-week-fill"></i></a></span>
                         </td>

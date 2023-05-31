@@ -12,7 +12,7 @@ class Disponibilidad_Empleado extends Model
     use SoftDeletes;
 
     public $timestamps = false;
-
+    protected $primaryKey = 'id_disponibilidad';
     protected $table = 'disponibilidad_empleado';
 
     protected $fillable = [
