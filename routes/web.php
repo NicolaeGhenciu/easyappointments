@@ -124,6 +124,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['checkRole:empleado'])->group(function () {
 
         // --- Citas
+
         //Ver la agenda mensual, semanal y diaria del empleado
         Route::get('/agendaEmpleado', [CitasController::class, 'agendaEmpleado'])->name('agendaEmpleado');
         //Programar una nueva cita
@@ -147,5 +148,18 @@ Route::middleware(['auth'])->group(function () {
         Route::get('/miCuenta', [UserController::class, 'miCuenta'])->name('miCuenta');
         // --- Cambiar contraseña de un usuario
         Route::post('/cambiarPass', [UserController::class, 'cambiarPass'])->name('cambiarPass');
+    });
+
+    //Rol Cliente
+    Route::middleware(['checkRole:cliente'])->group(function () {
+
+        // --- Citas
+        
+         //Listar citas pasadas
+         Route::get('/listarCitasPasadas', [CitasController::class, 'listarCitasPasadas'])->name('listarCitasPasadas');
+         //Listar citas pendientes
+         Route::get('/listarCitasPendientes', [CitasController::class, 'listarCitasPendientes'])->name('listarCitasPendientes');
+         //Cancelar cita
+         Route::post('/cancelarCita/{id}', [CitasController::class, 'cancelarCita'])->name('cancelarCita');
     });
 });

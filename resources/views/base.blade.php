@@ -198,6 +198,26 @@
                                 </a>
                             </li>
                         @endif
+                        @if (Auth::check() && Auth::user()->role == 'cliente')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarCitasPendientes') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarCitasPendientes') }}"
+                                    aria-current="page" href="{{ route('listarCitasPendientes') }}">
+                                    <i class="bi bi-calendar3"></i>
+                                    <span class="ml-2">Citas pendientes</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::check() && Auth::user()->role == 'cliente')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarCitasPasadas') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarCitasPasadas') }}" aria-current="page"
+                                    href="{{ route('listarCitasPasadas') }}">
+                                    <i class="bi bi-calendar2-range-fill"></i>
+                                    <span class="ml-2">Citas pasadas</span>
+                                </a>
+                            </li>
+                        @endif
                     </ul>
                 </div>
             </nav>

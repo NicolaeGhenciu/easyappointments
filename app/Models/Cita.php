@@ -12,7 +12,7 @@ class Cita extends Model
     use SoftDeletes;
 
     public $timestamps = false;
-
+    protected $primaryKey = 'id_cita';
     protected $table = 'citas';
 
     protected $fillable = [

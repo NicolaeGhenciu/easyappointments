@@ -9,6 +9,7 @@ use App\Models\Empleado;
 use App\Models\Empresa;
 use App\Models\Servicio;
 use App\Models\User;
+use Carbon\Carbon;
 use DateTime;
 use PDF;
 use Illuminate\Http\Request;
@@ -508,6 +509,61 @@ class CitasController extends Controller
         });
 
         session()->flash('message', "$asunto modificada correctamente.");
+
+        return back();
+    }
+
+    public function listarCitasPasadas()
+    {
+
+        $cliente = Cliente::where('id_cliente', Auth::user()->cliente_id)->first();
+
+        $fechaActual = Carbon::now(); // Obtener la fecha y hora actual
+
+        $citas = Cita::where('id_cliente', Auth::user()->cliente_id)
+            ->whereNull('deleted_at')
+            ->whereDate('fecha_inicio', '<', $fechaActual->toDateString())
+            ->orWhere(function ($query) use ($fechaActual) {
+                $query->whereDate('fecha_inicio', '=', $fechaActual->toDateString())
+                    ->whereTime('fecha_inicio', '<', $fechaActual->toTimeString());
+            })
+            ->orWhere('status', 'Cancelada')
+            ->get();
+
+        return view('cita.citasPasadas', ['$cliente' => $cliente, 'citas' => $citas]);
+    }
+
+    public function listarCitasPendientes()
+    {
+
+        $cliente = Cliente::where('id_cliente', Auth::user()->cliente_id)->first();
+
+        $fechaActual = Carbon::now(); // Obtener la fecha y hora actual
+
+        $citas = Cita::where('id_cliente', Auth::user()->cliente_id)
+            ->where('status', 'Confirmada')
+            ->whereNull('deleted_at')
+            ->whereDate('fecha_inicio', '>', $fechaActual->toDateString())
+            ->orWhere(function ($query) use ($fechaActual) {
+                $query->whereDate('fecha_inicio', '=', $fechaActual->toDateString())
+                    ->whereTime('fecha_inicio', '>', $fechaActual->toTimeString());
+            })
+            ->get();
+
+        return view('cita.citasPendientes', ['$cliente' => $cliente, 'citas' => $citas]);
+    }
+
+    public function cancelarCita($id)
+    {
+        $cita = Cita::where('id_cita', $id)
+            ->whereNull('deleted_at')
+            ->first();
+
+        $cita->update([
+            'status' => "Cancelada",
+        ]);
+
+        session()->flash('message', 'Cita cancelada correctamente.');
 
         return back();
     }
