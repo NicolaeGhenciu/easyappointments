@@ -513,6 +513,94 @@ class CitasController extends Controller
         return back();
     }
 
+    public function nuevaCita_Cliente()
+    {
+
+        session()->flash('crear');
+
+        $datos = request()->validate([
+            'empleado_id' => 'required',
+            'servicio_id' => 'required',
+            'fecha' => 'required',
+            'hora' => 'required',
+        ]);
+
+        $empleadoDatos = Empleado::where('id_empleado', $datos['empleado_id'])->first();
+
+        $servicio = Servicio::where('id_servicio', $datos['servicio_id'])->first();
+
+        // Crear un timestamp a partir de la fecha y hora
+        $timestamp = strtotime($datos['fecha'] . ' ' . $datos['hora']);
+
+        // Formatear el timestamp según tus necesidades
+        $timestampInicio = date('Y-m-d H:i:s', $timestamp);
+
+        // Sumar 40 minutos al timestamp
+        $nuevoTimestamp = strtotime("+" . $servicio->duracion . " minutes", $timestamp);
+
+        $timestampFin = date('Y-m-d H:i:s', $nuevoTimestamp);
+
+        // Verificar si existe alguna otra cita no eliminada y confirmada en esa fecha y hora
+        $existeCita = Cita::where('id_empleado', $datos['empleado_id'])
+            ->where('id_empresa', $empleadoDatos->id_empresa)
+            ->where('fecha_inicio', '<', $timestampFin)
+            ->where('fecha_fin', '>', $timestampInicio)
+            ->whereNull('deleted_at') // Verificar que no esté borrada (soft delete)
+            ->where('status', ['Confirmada', 'Pendiente']) // Verificar que esté confirmada
+            ->exists();
+
+        if ($existeCita) {
+            session()->flash('error', 'No es posible confirmar la cita, ya que hay otra cita programada para ese horario.');
+            return back();
+        }
+
+        $diaSemanaCita = date('w', $timestamp);
+
+        $disponibilidadDia = Disponibilidad_Empleado::where('dia_semana', $diaSemanaCita)
+            ->where('id_empleado', $datos['empleado_id'])
+            ->first();
+
+        $horaCita = DateTime::createFromFormat('H:i', $datos['hora']);
+        $horaInicio = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_inicio);
+        $horaFin = DateTime::createFromFormat('H:i:s', $disponibilidadDia->hora_fin);
+
+        if (!$disponibilidadDia || $horaCita < $horaInicio || $horaCita > $horaFin) {
+            session()->flash('error', 'La hora de la cita está fuera del horario disponible del trabajador');
+            return back();
+        }
+
+        $cita = Cita::create([
+            'id_cliente' => Auth::user()->cliente_id,
+            'id_empresa' => $empleadoDatos->id_empresa,
+            'id_empleado' => $datos['empleado_id'],
+            'id_servicio' => data_get($servicio, 'id_servicio'),
+            'fecha_inicio' => $timestampInicio,
+            'fecha_fin' => $timestampFin,
+            'status' => "Confirmada",
+        ]);
+
+        $pdf = PDF::loadView('pdf.cita', compact('cita'));
+
+        $pdf_content = $pdf->output();
+
+        $cliente = Cliente::where('id_cliente', Auth::user()->cliente_id)
+            ->first();
+
+        $asunto = "Cita" . $servicio['cod'] . " - $cliente->nif";
+        $email = "nicoadrianx42x@gmail.com";
+
+        Mail::send('email.citaPDF', ['cita' => $cita, 'asunto' => $asunto, 'cliente' => $cliente], function ($message) use ($email, $pdf_content, $asunto) {
+            $message->from('easyappointments@empresa.com', 'Easyappointments');
+            $message->to($email)
+                ->subject($asunto)
+                ->attachData($pdf_content, "$asunto.pdf");
+        });
+
+        session()->flash('message', 'Cita programada correctamente.');
+
+        return back();
+    }
+
     public function listarCitasPasadas()
     {
 

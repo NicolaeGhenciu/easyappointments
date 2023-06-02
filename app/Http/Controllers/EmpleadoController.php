@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Cita;
+use App\Models\Disponibilidad_Empleado;
 use App\Models\Empleado;
 use App\Models\Servicio;
 use App\Models\Municipio;
@@ -168,5 +170,36 @@ class EmpleadoController extends Controller
         }
 
         return redirect()->route('serviciosEmpleado', $empleadoDatos->id_empleado);
+    }
+
+    public function getEmpleadoServicio($idEmpresa, $idServicio)
+    {
+
+        $empleados = Empleado::where('id_empresa', $idEmpresa)
+            ->join('servicios_empleado', 'empleados.id_empleado', '=', 'servicios_empleado.id_empleado')
+            ->where('servicios_empleado.id_servicio', $idServicio)
+            ->get();
+
+        return response()->json($empleados);
+    }
+
+    public function getEmpleadoCitasDisponibilidad($idEmpleado)
+    {
+
+        $disponibilidad = Disponibilidad_Empleado::where('id_empleado', $idEmpleado)
+            ->whereNull('deleted_at')
+            ->get();
+
+        $citas = Cita::where('id_empleado', $idEmpleado)
+            ->where('status', 'Confirmada')
+            ->whereNull('deleted_at')
+            ->get();
+
+        $data = [
+            'citas' => $citas,
+            'disponibilidad' => $disponibilidad
+        ];
+
+        return response()->json($data);
     }
 }

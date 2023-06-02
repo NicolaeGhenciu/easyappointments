@@ -154,12 +154,25 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['checkRole:cliente'])->group(function () {
 
         // --- Citas
-        
-         //Listar citas pasadas
-         Route::get('/listarCitasPasadas', [CitasController::class, 'listarCitasPasadas'])->name('listarCitasPasadas');
-         //Listar citas pendientes
-         Route::get('/listarCitasPendientes', [CitasController::class, 'listarCitasPendientes'])->name('listarCitasPendientes');
-         //Cancelar cita
-         Route::post('/cancelarCita/{id}', [CitasController::class, 'cancelarCita'])->name('cancelarCita');
+
+        //Listar citas pasadas
+        Route::get('/listarCitasPasadas', [CitasController::class, 'listarCitasPasadas'])->name('listarCitasPasadas');
+        //Listar citas pendientes
+        Route::get('/listarCitasPendientes', [CitasController::class, 'listarCitasPendientes'])->name('listarCitasPendientes');
+        //Cancelar cita
+        Route::post('/cancelarCita/{id}', [CitasController::class, 'cancelarCita'])->name('cancelarCita');
+        //Solicitar una cita
+        Route::post('/nuevaCita_Cliente', [CitasController::class, 'nuevaCita_Cliente'])->name('nuevaCita_Cliente');
+
+        // --- Servicios ofrecidos
+
+        //Listar servicios de la empresa elegida
+        Route::get('/listarServiciosOfrecidos', [ServicioController::class, 'listarServiciosOfrecidos'])->name('listarServiciosOfrecidos');
+
+        //Conseguir empleado que presta x servicio de x empresa
+        Route::get('/getEmpleadoServicio/{idEmpresa}/{idServicio}', [EmpleadoController::class, 'getEmpleadoServicio'])->name('getEmpleadoServicio');
+
+        //Conseguir empleado que presta x servicio de x empresa
+        Route::get('/getEmpleadoCitasDisponibilidad/{idEmpleado}', [EmpleadoController::class, 'getEmpleadoCitasDisponibilidad'])->name('getEmpleadoCitasDisponibilidad');
     });
 });

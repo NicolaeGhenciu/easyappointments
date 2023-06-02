@@ -200,6 +200,16 @@
                         @endif
                         @if (Auth::check() && Auth::user()->role == 'cliente')
                             <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('listarServiciosOfrecidos') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('listarServiciosOfrecidos') }}" aria-current="page"
+                                    href="{{ route('listarServiciosOfrecidos') }}">
+                                    <i class="bi bi-calendar2-plus-fill"></i>
+                                    <span class="ml-2">Buscar Servicios</span>
+                                </a>
+                            </li>
+                        @endif
+                        @if (Auth::check() && Auth::user()->role == 'cliente')
+                            <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('listarCitasPendientes') ? 'active' : '' }}"
                                     aria-current="page" href="{{ route('listarCitasPendientes') }}"
                                     aria-current="page" href="{{ route('listarCitasPendientes') }}">

@@ -109,4 +109,13 @@ class ServicioController extends Controller
         session()->flash('message', "$sercicioDatos->cod ha sido dado de baja correctamente.");
         return redirect()->route('listarServicios');
     }
+
+    public function listarServiciosOfrecidos()
+    {
+        $servicios = Servicio::whereNull('deleted_at')
+            ->orderBy('nombre', 'desc')
+            ->get();
+
+        return view('serviciosOfrecidos.lista', ['servicios' => $servicios]);
+    }
 }
