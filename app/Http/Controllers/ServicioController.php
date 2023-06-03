@@ -113,6 +113,10 @@ class ServicioController extends Controller
     public function listarServiciosOfrecidos()
     {
         $servicios = Servicio::whereNull('deleted_at')
+            ->whereIn('id_servicio', function ($query) {
+                $query->select('id_servicio')
+                    ->from('servicios_empleado');
+            })
             ->orderBy('nombre', 'desc')
             ->get();
 
