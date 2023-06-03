@@ -75,6 +75,10 @@ class ClienteController extends Controller
             'id_empresa' => $empresaId,
         ]);
 
+        session()->forget('asociar');
+
+        session()->flash('message', 'El cliente ha sido asociado correctamente.');
+
         return redirect()->route('listarClientes');
     }
 

@@ -226,11 +226,11 @@
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Horario">
                                 <a class="btn btn-primary"
                                     href="{{ route('listarHorario', ['id' => $empleado->id_empleado]) }}">
-                                    <i class="bi bi-hourglass-split"></i></a></span>
+                                    <i class="bi bi-stopwatch"></i></a></span>
                         </td>
                         <td>
                             <span data-bs-toggle="tooltip" data-bs-placement="top" title="Agenda">
-                                <a class="btn btn-secondary"
+                                <a class="btn btn-light btn-outline-dark"
                                     href="{{ route('agendaEmpleadoEmpresa', ['id' => $empleado->id_empleado]) }}">
                                     <i class="bi bi-calendar-week-fill"></i></a></span>
                         </td>
@@ -295,7 +295,7 @@
     <div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-info text-white">
                     <h5 class="modal-title" id="detallesModalLabel"><b>Detalles del empleado</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -347,7 +347,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Dar de alta un empleado</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -489,8 +489,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Dar de alta <i
+                            class="bi bi-person-fill-add"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
             </div>
@@ -503,7 +504,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="modificarModalLabel"><b>Modificar datos del empleado</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -641,8 +642,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Modificar <i
+                            class="bi bi-person-fill-gear"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Modificar</button>
                 </div>
                 </form>
             </div>
@@ -680,12 +682,13 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form method="POST" id="borrar-empleado-form" action="">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Dar de baja</button>
+                        <button type="submit" class="btn btn-danger">Dar de baja <i
+                                class="bi bi-person-fill-slash"></i></button>
                     </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

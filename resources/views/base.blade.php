@@ -6,9 +6,9 @@
 
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <link rel="icon" href="{{ asset('img/icono.png') }}" type="image/x-icon">
-
     <title>@yield('title')</title>
+
+    {{-- Bootsrap --}}
 
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/5.0.0-alpha1/css/bootstrap.min.css"
         integrity="sha384-r4NyP46KrjDleawBgD5tp8Y7UzmLA05oM1iAEQ17CSuDqnUK2+k9luXQOfXJCJ4I" crossorigin="anonymous">
@@ -33,15 +33,26 @@
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.2/font/bootstrap-icons.css"
         integrity="sha384-b6lVK+yci+bfDmaY1u0zE8YYJt0TZxLEAFyYSLHId4xoVvsrQu3INevFKo+Xir8e" crossorigin="anonymous">
 
+    {{-- Chartist --}}
+
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltip@0.0.11/chartist-plugin-tooltip.min.js"></script>
+
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.css">
 
     <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js"></script>
+
+    {{-- asset --}}
+
+    <link rel="icon" href="{{ asset('img/icono.png') }}" type="image/x-icon">
 
     <link rel="stylesheet" href="{{ asset('css/base.css') }}">
 
     <script src={{ asset('js/base.js') }}></script>
 
     <script>
+        //Para que el logout y que funcione los tooltip
         window.onload = function() {
             document.getElementById('logout-link').addEventListener('click', function(event) {
                 event.preventDefault();
@@ -68,6 +79,7 @@
     </script>
 
     <style>
+        /* Fuente de la página */
         @import url('https://fonts.googleapis.com/css2?family=Yantramanav&display=swap');
 
         * {
@@ -82,7 +94,7 @@
 <body>
     <nav class="navbar navbar-light bg-light p-2">
         <div class="d-flex col-12 col-md-3 col-lg-2 mb-2 mb-lg-0 flex-wrap flex-md-nowrap justify-content-between">
-            <a class="navbar-brand" href="#">
+            <a class="navbar-brand" href="{{ route('easyappointments') }}">
                 <svg height="40px" width="40px" version="1.1" id="Layer_1" xmlns="http://www.w3.org/2000/svg"
                     xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 512 512" xml:space="preserve"
                     fill="#000000">
@@ -117,7 +129,7 @@
 
         <div class="col-12 col-md-5 col-lg-8 d-flex align-items-center justify-content-md-end mt-3 mt-md-0">
             <div class="dropdown">
-                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton"
+                <button class="btn btn-light btn-outline-dark dropdown-toggle" type="button" id="dropdownMenuButton"
                     data-toggle="dropdown" aria-expanded="false">
                     @if (Auth::user()->role == 'empresa')
                         <i class="bi bi-building-fill"></i>
@@ -151,6 +163,24 @@
                                 <span class="ml-2">Noticias</span>
                             </a>
                         </li>
+                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('horarioEmpleado') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('horarioEmpleado') }}" aria-current="page"
+                                    href="{{ route('horarioEmpleado') }}">
+                                    <i class="bi bi-stopwatch"></i>
+                                    <span class="ml-2">Horarios</span>
+                                </a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
+                                    href="{{ route('agendaEmpleado') }}">
+                                    <i class="bi bi-calendar-week-fill"></i>
+                                    <span class="ml-2">Agenda</span>
+                                </a>
+                            </li>
+                        @endif
                         @if (Auth::check() && Auth::user()->role == 'empresa')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('listarEmpleados') ? 'active' : '' }}"
@@ -178,31 +208,21 @@
                                 </a>
                             </li>
                         @endif
-                        @if (Auth::check() && Auth::user()->role == 'empleado')
+                        @if (Auth::check() && Auth::user()->role == 'empresa')
                             <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('horarioEmpleado') ? 'active' : '' }}"
-                                    aria-current="page" href="{{ route('horarioEmpleado') }}" aria-current="page"
-                                    href="{{ route('horarioEmpleado') }}">
-                                    <i class="bi bi-hourglass-split"></i>
-                                    <span class="ml-2">Horarios</span>
-                                </a>
-                            </li>
-                        @endif
-                        @if (Auth::check() && Auth::user()->role == 'empleado')
-                            <li class="nav-item">
-                                <a class="nav-link {{ request()->routeIs('agendaEmpleado') ? 'active' : '' }}"
-                                    aria-current="page" href="{{ route('agendaEmpleado') }}" aria-current="page"
-                                    href="{{ route('agendaEmpleado') }}">
-                                    <i class="bi bi-calendar-week-fill"></i>
-                                    <span class="ml-2">Agenda</span>
+                                <a class="nav-link {{ request()->routeIs('estadisticas1') ? 'active' : '' }}"
+                                    aria-current="page" href="{{ route('estadisticas1') }}" aria-current="page"
+                                    href="{{ route('estadisticas1') }}">
+                                    <i class="bi bi-clipboard-data"></i>
+                                    <span class="ml-2">Estadisticas</span>
                                 </a>
                             </li>
                         @endif
                         @if (Auth::check() && Auth::user()->role == 'cliente')
                             <li class="nav-item">
                                 <a class="nav-link {{ request()->routeIs('listarServiciosOfrecidos') ? 'active' : '' }}"
-                                    aria-current="page" href="{{ route('listarServiciosOfrecidos') }}" aria-current="page"
-                                    href="{{ route('listarServiciosOfrecidos') }}">
+                                    aria-current="page" href="{{ route('listarServiciosOfrecidos') }}"
+                                    aria-current="page" href="{{ route('listarServiciosOfrecidos') }}">
                                     <i class="bi bi-calendar2-plus-fill"></i>
                                     <span class="ml-2">Buscar Servicios</span>
                                 </a>

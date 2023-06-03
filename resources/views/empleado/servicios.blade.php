@@ -69,7 +69,7 @@
 
     <!-- Si existe una sesion de crear mostramos el modal nada mas cargar la pagina -->
 
-    @if (session()->get('asociar'))
+    @if (session()->get('asociar') && !session()->has('error'))
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
@@ -91,7 +91,7 @@
             <div class="col-auto">
                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Asociar un servicio">
                     <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal">
-                        <i class="bi bi-bag-plus-fill"></i></a></span>
+                        <i class="bi bi-link"></i></a></span>
             </div>
             <div class="col text-center">
                 <h3>Servicios que presta: {{ $empleado->nombre }} {{ $empleado->apellidos }}, NIF - {{ $empleado->nif }}
@@ -135,7 +135,7 @@
                         <td>{{ $servicio->servicio->duracion }} minutos</td>
                         <td>
                             <div class="btn-group btn-group-md gap-1">
-                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Borrar asociación">
+                                <span data-bs-toggle="tooltip" data-bs-placement="top" title="Eliminar una asociación">
                                     <a class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#borrarModal"
                                         data-servicio="{{ $servicio }}">
                                         <i class="bi bi-trash-fill"></i></a></span>
@@ -174,7 +174,11 @@
             </ul>
         </nav>
     </div>
-
+    <div id="centrar">
+        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Volver atras">
+            <a class="btn btn-primary" href="{{ route('listarEmpleados') }}">
+                <i class="bi bi-arrow-left"></i> Volver atrás</a></span>
+    </div>
 @endsection
 
 @section('modals')
@@ -184,7 +188,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Asociar un servicio a {{ $empleado->nombre }}
                             {{ $empleado->apellidos }}</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -238,8 +242,8 @@
                         </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Asociar <i class="bi bi-link"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Asociar</button>
                 </div>
                 </form>
             </div>
@@ -251,7 +255,7 @@
     <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="borrarModalLabel"><b>Borrar asociación-servicio</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -282,12 +286,13 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form method="POST" id="desasociar-form" action="">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Borrar asociación</button>
+                        <button type="submit" class="btn btn-danger">Eliminar asociación <i
+                                class="bi bi-trash3"></i></button>
                     </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

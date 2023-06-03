@@ -68,7 +68,10 @@
                 var button = $(event.relatedTarget);
                 var servicio = button.data('servicio');
                 servicioSupra = servicio;
-
+                if (servicioSupra == undefined) {
+                    servicio = {!! json_encode(session('servicio_solicitado')) !!};
+                    servicioSupra = servicio;
+                }
                 $('#servicio_id').val(servicio.id_servicio);
                 $('#añadir-info-cod').text(servicio.cod);
                 $('#añadir-info-nombre').text(servicio.nombre);
@@ -78,6 +81,12 @@
                 $("#tablaDatosServicios").fadeIn(200);
 
                 getEmpleadoServicio(servicio);
+
+                $('#programar-cita-form').submit(function() {
+                    var url = "{{ route('nuevaCita_Cliente', ['id' => ':idservicio']) }}";
+                    url = url.replace(':idservicio', servicio.id_servicio);
+                    $('#programar-cita-form').attr('action', url);
+                });
             });
 
             function getEmpleadoServicio(servicio) {
@@ -96,6 +105,12 @@
 
                 // Obtener todas las etiquetas <option> dentro del campo de fecha
                 var options = fechaInput.getElementsByTagName('option');
+
+                //Disponibilidad del empleado
+                var disponibilidad;
+
+                //Citas del empleado
+                var citas;
 
                 // Recorrer todas las etiquetas <option> y deshabilitar las fechas anteriores a hoy
                 for (var i = 0; i < options.length; i++) {
@@ -135,9 +150,6 @@
                     }
                 });
             }
-
-            var disponibilidad;
-            var citas;
 
             $("#empleado_id").on('change', function() {
                 let idEmpleado = $('#empleado_id').val();
@@ -270,19 +282,24 @@
                 }
                 var option = document.createElement('option');
                 option.text = "Seleccione otro día";
+                option.value = "";
                 selectHora.appendChild(option);
             }
         }
     </script>
 
-    {{-- @if (session()->get('crear'))
+    @if (session()->get('crear'))
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
                 //Limpiar los mensajes de error al cerrar el modal
+                $('#añadirModal').on('hidden.bs.modal', function() {
+                    // Limpiar los mensajes de error
+                    $('.error-validacion').hide();
+                });
             });
         </script>
-    @endif --}}
+    @endif
 
 @endsection
 
@@ -356,14 +373,14 @@
     <!-- Modal añadir cita -->
 
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Programar cita</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form action="{{ route('nuevaCita_Cliente') }}" method="post">
+                    <form action="" method="post" id="programar-cita-form">
                         @csrf
                         <div class="row mb-3">
 
@@ -384,7 +401,7 @@
                             <div class="col">
                                 <label class="form-label">Fecha:</label>
                                 <input type="date" class="form-control border border-primary" name="fecha"
-                                    id="fecha" @if (old('fecha') && session()->get('crear')) value="{{ old('fecha') }}" @endif>
+                                    id="fecha">
                                 @if ($errors->has('fecha') && session()->get('crear'))
                                     <div class="alert alert-danger mt-1 error-validacion">
                                         {!! $errors->first('fecha', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
@@ -403,8 +420,6 @@
                                     </div>
                                 @endif
                             </div>
-
-                            <input type="text" id="servicio_id" name="servicio_id" style="display:none;">
 
                             <div class="table-responsive mt-3" style="display:none;" id="tablaDatosServicios">
                                 <table class="table table-striped">
@@ -435,8 +450,9 @@
                         </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Programar cita <i
+                            class="bi bi-calendar2-plus"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
             </div>

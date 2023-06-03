@@ -116,7 +116,10 @@
             return new Date(fecha).toLocaleDateString('es-ES', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric'
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
             });
         }
     </script>
@@ -287,7 +290,7 @@
     <!-- Modal cancelar cita -->
 
     <div class="modal fade" id="borrarModal" tabindex="-1" aria-labelledby="borrarModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+        <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable modal-lg">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
                     <h5 class="modal-title" id="borrarModalLabel"><b>Cancelar cita</b></h5>
@@ -369,11 +372,12 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                     <form method="POST" id="borrar-form" action="">
                         @csrf
-                        <button type="submit" class="btn btn-danger">Cancelar cita</button>
+                        <button type="submit" class="btn btn-danger">Cancelar cita <i
+                                class="bi bi-slash-circle"></i></button>
                     </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
                 </div>
             </div>
         </div>

@@ -45,29 +45,35 @@
                     <h1 class="text-center">Cuenta de empresa <i class="bi bi-building-fill"></i></h1>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Información</h4>
+                    <h4 class="card-title"><i class="bi bi-info-circle"></i> Información</h4>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Nombre:</strong> {{ $empresa->nombre }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> {{ Auth::user()->email }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>CIF:</strong> {{ $empresa->cif }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Teléfono:</strong> {{ $empresa->telefono }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Dirección:</strong> {{ $empresa->direccion }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Provincia:</strong> {{ $empresa->provincia->provincia }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Municipio:</strong> {{ $empresa->municipio->municipio }}
-                        </li>
+                        <div class="row">
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Nombre:</strong> {{ $empresa->nombre }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Email:</strong> {{ Auth::user()->email }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>CIF:</strong> {{ $empresa->cif }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Teléfono:</strong> {{ $empresa->telefono }}
+                                </li>
+                            </div>
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Dirección:</strong> {{ $empresa->direccion }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Provincia:</strong> {{ $empresa->provincia->provincia }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Municipio:</strong> {{ $empresa->municipio->municipio }}
+                                </li>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <a class="btn btn-warning" onclick="showModificarEmpresaContraseña()">Cambiar contraseña <i
@@ -83,39 +89,45 @@
                     <h1 class="text-center">Cuenta de empelado <i class="bi bi-person-circle"></i></h1>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Información</h4>
+                    <h4 class="card-title"><i class="bi bi-info-circle"></i> Información</h4>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Nombre:</strong> {{ $empleado->nombre }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Apellidos:</strong> {{ $empleado->apellidos }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> {{ Auth::user()->email }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>NIF:</strong> {{ $empleado->nif }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Cargo:</strong> {{ $empleado->cargo }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Fecha de nacimiento:</strong>
-                            {{ date('d-m-Y', strtotime($empleado->fecha_nacimiento)) }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Teléfono:</strong> {{ $empleado->telefono }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Dirección:</strong> {{ $empleado->direccion }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Provincia:</strong> {{ $empleado->provincia->provincia }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Municipio:</strong> {{ $empleado->municipio->municipio }}
-                        </li>
+                        <div class="row">
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Nombre:</strong> {{ $empleado->nombre }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Apellidos:</strong> {{ $empleado->apellidos }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Email:</strong> {{ Auth::user()->email }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>NIF:</strong> {{ $empleado->nif }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Cargo:</strong> {{ $empleado->cargo }}
+                                </li>
+                            </div>
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Fecha de nacimiento:</strong>
+                                    {{ date('d-m-Y', strtotime($empleado->fecha_nacimiento)) }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Teléfono:</strong> {{ $empleado->telefono }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Dirección:</strong> {{ $empleado->direccion }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Provincia:</strong> {{ $empleado->provincia->provincia }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Municipio:</strong> {{ $empleado->municipio->municipio }}
+                                </li>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <a class="btn btn-warning" onclick="showModificarEmpresaContraseña()">Cambiar contraseña <i
@@ -131,36 +143,42 @@
                     <h1 class="text-center">Cuenta de cliente <i class="bi bi-person-fill"></i></h1>
                 </div>
                 <div class="card-body">
-                    <h4 class="card-title">Información</h4>
+                    <h4 class="card-title"><i class="bi bi-info-circle"></i> Información</h4>
                     <ul class="list-group list-group-flush">
-                        <li class="list-group-item">
-                            <strong>Nombre:</strong> {{ $cliente->nombre }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Apellidos:</strong> {{ $cliente->apellidos }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Email:</strong> {{ Auth::user()->email }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>NIF:</strong> {{ $cliente->nif }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Fecha de nacimiento:</strong>
-                            {{ date('d-m-Y', strtotime($cliente->fecha_nacimiento)) }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Teléfono:</strong> {{ $cliente->telefono }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Dirección:</strong> {{ $cliente->direccion }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Provincia:</strong> {{ $cliente->provincia->provincia }}
-                        </li>
-                        <li class="list-group-item">
-                            <strong>Municipio:</strong> {{ $cliente->municipio->municipio }}
-                        </li>
+                        <div class="row">
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Nombre:</strong> {{ $cliente->nombre }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Apellidos:</strong> {{ $cliente->apellidos }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Email:</strong> {{ Auth::user()->email }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>NIF:</strong> {{ $cliente->nif }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Fecha de nacimiento:</strong>
+                                    {{ date('d-m-Y', strtotime($cliente->fecha_nacimiento)) }}
+                                </li>
+                            </div>
+                            <div class="col">
+                                <li class="list-group-item">
+                                    <strong>Teléfono:</strong> {{ $cliente->telefono }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Dirección:</strong> {{ $cliente->direccion }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Provincia:</strong> {{ $cliente->provincia->provincia }}
+                                </li>
+                                <li class="list-group-item">
+                                    <strong>Municipio:</strong> {{ $cliente->municipio->municipio }}
+                                </li>
+                            </div>
+                        </div>
                     </ul>
                 </div>
                 <a class="btn btn-warning" onclick="showModificarEmpresaContraseña()">Cambiar contraseña <i
@@ -199,7 +217,8 @@
                                     </div>
                                 @endif
                             </div>
-                            <button type="submit" class="btn btn-primary">Enviar</button>
+                            <button type="submit" class="btn btn-primary">Cambiar <i
+                                    class="bi bi-lock-fill"></i></button>
                         </form>
                     </li>
                 </ul>

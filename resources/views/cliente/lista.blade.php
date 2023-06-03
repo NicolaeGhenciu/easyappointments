@@ -190,8 +190,8 @@
             </div>
             <div class="col-auto">
                 <span data-bs-toggle="tooltip" data-bs-placement="top" title="Asociar un cliente existente">
-                    <a class="btn btn-info" data-bs-toggle="modal" data-bs-target="#asociarModal">
-                        <i class="bi bi-person-plus-fill"></i></a></span>
+                    <a class="btn btn-dark" data-bs-toggle="modal" data-bs-target="#asociarModal">
+                        <i class="bi bi-bookmark-plus-fill"></i></a></span>
             </div>
             <div class="col text-center">
                 <h1>Lista de Clientes</h1>
@@ -263,7 +263,7 @@
     <div class="modal fade" id="detallesModal" tabindex="-1" aria-labelledby="detallesModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-info text-white">
                     <h5 class="modal-title" id="detallesModalLabel"><b>Detalles del cliente</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -311,7 +311,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Dar de alta un cliente</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -442,8 +442,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Dar de alta <i
+                            class="bi bi-person-fill-add"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
             </div>
@@ -456,7 +457,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="modificarModalLabel"><b>Modificar datos del cliente</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -579,8 +580,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Modificar <i
+                            class="bi bi-person-fill-gear"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Modificar</button>
                 </div>
                 </form>
             </div>
@@ -592,7 +594,7 @@
     <div class="modal fade" id="asociarModal" tabindex="-1" aria-labelledby="asociarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="asociarModalLabel"><b>Asociar un cliente</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -617,8 +619,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Asociar <i
+                            class="bi bi-bookmark-plus-fill"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Asociar</button>
                 </div>
                 </form>
             </div>
@@ -652,12 +655,13 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form method="POST" id="desasociar-form" action="">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Desasociar</button>
+                        <button type="submit" class="btn btn-danger">Desasociar <i
+                                class="bi bi-slash-circle"></i></button>
                     </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

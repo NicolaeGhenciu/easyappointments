@@ -63,6 +63,8 @@ class DisponibilidadEmpleadoController extends Controller
         ];
 
         session()->flash('crear');
+        session(['id_disponibilidad' => $id]);
+        session(['id_dia' => $dia]);
 
         $datos = request()->validate([
             'hora_inicio' => 'required',

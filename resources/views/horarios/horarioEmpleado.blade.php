@@ -70,7 +70,7 @@
             <tbody>
                 @foreach ($dias_semana as $index => $dia)
                     <tr>
-                        <td>{{ $dia }}</td>
+                        <td><b>{{ $dia }}</b></td>
                         @php
                             $dispo_encontrado = false;
                         @endphp

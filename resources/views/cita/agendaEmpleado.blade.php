@@ -341,7 +341,10 @@
             return new Date(fecha).toLocaleDateString('es-ES', {
                 day: '2-digit',
                 month: '2-digit',
-                year: 'numeric'
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit',
+                second: '2-digit',
             });
         }
 
@@ -416,6 +419,14 @@
         </script>
     @endif
 
+    @if (session()->get('modificar'))
+        <script>
+            document.addEventListener("DOMContentLoaded", function() {
+                $('#error-validacion').hide();
+            });
+        </script>
+    @endif
+
     <style>
         #calendar {
             height: 75vh;
@@ -465,6 +476,12 @@
     @if (session()->has('error'))
         <div class="alert alert-danger">
             {{ session()->get('error') }}
+        </div>
+    @endif
+
+    @if (session()->has('modificar'))
+        <div class="alert alert-danger">
+            {{ session()->get('modificar') }}
         </div>
     @endif
 
@@ -580,7 +597,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Programar cita</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -677,8 +694,9 @@
                         </div>
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Programar cita <i
+                            class="bi bi-calendar2-plus"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
             </div>
@@ -691,7 +709,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="modificarModalLabel"><b>Modificar cita <span id="titulo_mod"></span></b>
                     </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -815,8 +833,8 @@
                         </div>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <button class="btn btn-warning" type="submit">Modificar <i class="bi bi-pen-fill"></i></button>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
                 </form>
             </div>

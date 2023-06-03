@@ -155,7 +155,7 @@
             <tbody>
                 @foreach ($servicios as $servicio)
                     <tr>
-                        <td>{{ $servicio->cod }}</td>
+                        <td><b>{{ $servicio->cod }}</b></td>
                         <td>{{ $servicio->nombre }}</td>
                         <td>{{ $servicio->descripcion }}</td>
                         <td>{{ $servicio->precio }} €</td>
@@ -216,7 +216,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Dar de alta un servicio</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -278,7 +278,7 @@
                             <div class="col">
                                 <label class="form-label">Precio:</label>
                                 <input type="text" class="form-control border border-primary" name="precio"
-                                    @if (old('precio') && session()->get('crear')) value="{{ old('precio') }}" @endif>
+                                    placeholder="€" @if (old('precio') && session()->get('crear')) value="{{ old('precio') }}" @endif>
                                 @if ($errors->has('precio') && session()->get('crear'))
                                     <div class="alert alert-danger mt-1">
                                         {!! $errors->first('precio', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
@@ -289,8 +289,9 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Dar de alta <i
+                            class="bi bi-bag-plus-fill"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Dar de alta</button>
                 </div>
                 </form>
             </div>
@@ -303,7 +304,7 @@
         aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="modificarModalLabel"><b>Modificar datos del servicio</b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -355,7 +356,7 @@
                             <div class="col">
                                 <label class="form-label">Duración:</label>
                                 <input type="text" class="form-control border border-primary" name="duracion"
-                                    id="duracion_mod" value="{{ old('duracion') }}">
+                                    placeholder="minutos" id="duracion_mod" value="{{ old('duracion') }}">
                                 @if ($errors->has('duracion') && session()->get('modificar'))
                                     <div class="alert alert-danger mt-1">
                                         {!! $errors->first('duracion', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
@@ -366,7 +367,7 @@
                             <div class="col">
                                 <label class="form-label">Precio:</label>
                                 <input type="text" class="form-control border border-primary" name="precio"
-                                    id="precio_mod" value="{{ old('precio') }}">
+                                    placeholder="€" id="precio_mod" value="{{ old('precio') }}">
                                 @if ($errors->has('precio') && session()->get('modificar'))
                                     <div class="alert alert-danger mt-1">
                                         {!! $errors->first('precio', '<b style="color: rgb(184, 0, 0)">:message</b>') !!}
@@ -378,8 +379,8 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Modificar <i class="bi bi-pencil-fill"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Modificar</button>
                 </div>
                 </form>
             </div>
@@ -421,12 +422,12 @@
                     </table>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                     <form method="POST" id="borrar-servicio-form" action="">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Dar de baja</button>
+                        <button type="submit" class="btn btn-danger">Dar de baja <i class="bi bi-trash3"></i></button>
                     </form>
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
                 </div>
             </div>
         </div>

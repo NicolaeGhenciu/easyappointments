@@ -154,7 +154,7 @@ class CitasController extends Controller
     {
         $empleadoDatos = Empleado::where('id_empleado', Auth::user()->empleado_id)->first();
 
-        session()->flash('modificar');
+        session()->flash('modificar', "La cita no ha podido ser modificada.");
 
         $datos = request()->validate([
             'cliente_id' => 'required',
@@ -268,6 +268,8 @@ class CitasController extends Controller
 
         session()->flash('message', "$asunto modificada correctamente.");
 
+        session()->forget('modificar');
+
         return back();
     }
 
@@ -302,7 +304,7 @@ class CitasController extends Controller
             ->whereNull('deleted_at')
             ->get();
 
-        return view('cita.agendaEmpleadoEmpresa', ['citas' => $citas, 'citasConfirmadas' => $citasConfirmadas, 'clientes' => $clientes, 'servicios' => $servicios, 'disponibilidad' => $disponibilidad, 'id' => $id]);
+        return view('cita.agendaEmpleadoEmpresa', ['citas' => $citas, 'citasConfirmadas' => $citasConfirmadas, 'clientes' => $clientes, 'servicios' => $servicios, 'disponibilidad' => $disponibilidad, 'id' => $id, 'empleado' => $empleado]);
     }
 
     public function nuevaCitaE_Empresa($id)
@@ -396,7 +398,7 @@ class CitasController extends Controller
     {
         $empleadoDatos = Empleado::where('id_empleado', $idEmpleado)->first();
 
-        session()->flash('modificar');
+        session()->flash('modificar', "La cita no ha podido ser modificada.");
 
         $datos = request()->validate([
             'cliente_id' => 'required',
@@ -510,24 +512,28 @@ class CitasController extends Controller
 
         session()->flash('message', "$asunto modificada correctamente.");
 
+        session()->forget('modificar');
+
         return back();
     }
 
-    public function nuevaCita_Cliente()
+    public function nuevaCita_Cliente($idServicio)
     {
 
         session()->flash('crear');
 
+        $servicio = Servicio::where('id_servicio', $idServicio)->first();
+
+        session(['servicio_solicitado' => $servicio]);
+
         $datos = request()->validate([
             'empleado_id' => 'required',
-            'servicio_id' => 'required',
             'fecha' => 'required',
             'hora' => 'required',
         ]);
 
         $empleadoDatos = Empleado::where('id_empleado', $datos['empleado_id'])->first();
 
-        $servicio = Servicio::where('id_servicio', $datos['servicio_id'])->first();
 
         // Crear un timestamp a partir de la fecha y hora
         $timestamp = strtotime($datos['fecha'] . ' ' . $datos['hora']);
@@ -597,6 +603,8 @@ class CitasController extends Controller
         });
 
         session()->flash('message', 'Cita programada correctamente.');
+
+        session()->forget('crear');
 
         return back();
     }

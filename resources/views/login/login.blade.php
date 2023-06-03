@@ -137,15 +137,15 @@
                         <tbody>
                             <tr>
                                 <th scope="row">Empresa</th>
-                                <td>angelica@gmail.com</td>
+                                <td>peluqueria@gmail.com</td>
                             </tr>
                             <tr>
                                 <th scope="row">Empleado</th>
-                                <td>juan@gmail.com</td>
+                                <td>emilio@gmail.com</td>
                             </tr>
                             <tr>
                                 <th scope="row">Cliente</th>
-                                <td>rosa@gmail.com</td>
+                                <td>juancuesta@gmail.com</td>
                             </tr>
                             <tr>
                                 <th scope="row">Contraseña</th>

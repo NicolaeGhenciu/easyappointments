@@ -71,6 +71,15 @@
         <script>
             $(document).ready(function() {
                 $('#añadirModal').modal('show');
+                $('#programar-horario-form').submit(function() {
+                    var url =
+                        "{{ route('programarHorario', ['id' => ':iddisponibilidad', 'dia' => ':iddia']) }}";
+                    url = url.replace(':iddisponibilidad',
+                        {{ old('id_disponibilidad', session('id_disponibilidad')) }});
+                    url = url.replace(':iddia',
+                        {{ old('id_dia', session('id_dia')) }});
+                    $('#programar-horario-form').attr('action', url);
+                });
                 //Limpiar los mensajes de error al cerrar el modal
                 $('#añadirModal').on('hidden.bs.modal', function() {
                     // Limpiar los mensajes de error
@@ -164,7 +173,7 @@
             <tbody>
                 @foreach ($dias_semana as $index => $dia)
                     <tr>
-                        <td>{{ $dia }}</td>
+                        <td><b>{{ $dia }}</b></td>
                         @php
                             $dispo_encontrado = false;
                         @endphp
@@ -196,10 +205,10 @@
                             <td></td>
                             <td>
                                 <div class="btn-group btn-group-md gap-1">
-                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Programar">
+                                    <span data-bs-toggle="tooltip" data-bs-placement="top" title="Programar horario">
                                         <a class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#añadirModal"
                                             data-dispo="{{ ($index + 1) % 7 }}">
-                                            <i class="bi bi-hourglass"></i></a></span>
+                                            <i class="bi bi-stopwatch"></i></a></span>
                                 </div>
                             </td>
                         @endif
@@ -207,6 +216,12 @@
                 @endforeach
             </tbody>
         </table>
+    </div>
+
+    <div id="centrar">
+        <span data-bs-toggle="tooltip" data-bs-placement="top" title="Volver atras">
+            <a class="btn btn-primary" href="{{ route('listarEmpleados') }}">
+                <i class="bi bi-arrow-left"></i> Volver atrás</a></span>
     </div>
 
 @endsection
@@ -218,7 +233,7 @@
     <div class="modal fade" id="añadirModal" tabindex="-1" aria-labelledby="añadirModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-primary text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Programar horario <span
                                 id="añadir-dia_semana"></span></b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -254,8 +269,8 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Programar <i class="bi bi-stopwatch"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Programar</button>
                 </div>
                 </form>
             </div>
@@ -267,7 +282,7 @@
     <div class="modal fade" id="modificarModal" tabindex="-1" aria-labelledby="modificarModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-warning text-white">
                     <h5 class="modal-title" id="añadirModalLabel"><b>Modificar horario <span
                                 id="modificar-dia_semana"></span></b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -306,8 +321,8 @@
 
                 </div>
                 <div class="modal-footer">
+                    <button class="btn btn-primary" type="submit">Modificar <i class="bi bi-gear-fill"></i></button>
                     <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button class="btn btn-primary" type="submit">Modificar</button>
                 </div>
                 </form>
             </div>
@@ -320,7 +335,7 @@
         <div class="modal-dialog modal-dialog-centered modal-dialog-scrollable">
             <div class="modal-content">
                 <div class="modal-header bg-danger text-white">
-                    <h5 class="modal-title" id="borrarModalLabel"><b>Confirmar baja de horario <span
+                    <h5 class="modal-title" id="borrarModalLabel"><b>Confirmar eliminar de horario <span
                                 id="borrar-dia_semana"></span></b></h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
@@ -346,7 +361,7 @@
                     <form method="POST" id="borrar-horario-form" action="">
                         @csrf
                         @method('DELETE')
-                        <button type="submit" class="btn btn-danger">Eliminar</button>
+                        <button type="submit" class="btn btn-danger">Eliminar <i class="bi bi-trash3"></i></button>
                     </form>
                 </div>
             </div>

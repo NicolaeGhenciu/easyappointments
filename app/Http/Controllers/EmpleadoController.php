@@ -99,6 +99,11 @@ class EmpleadoController extends Controller
 
         $allservicios = Servicio::where('id_empresa', Auth::user()->empresa_id)
             ->whereNull('deleted_at')
+            ->whereNotIn('id_servicio', function ($query) use ($id) {
+                $query->select('id_servicio')
+                    ->from('servicios_empleado')
+                    ->where('id_empleado', $id);
+            })
             ->get();
 
         $servicios = Servicio_Empleado::where('id_empleado', $id)

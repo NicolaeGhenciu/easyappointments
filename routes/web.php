@@ -5,6 +5,7 @@ use App\Http\Controllers\CitasController;
 use App\Http\Controllers\ClienteController;
 use App\Http\Controllers\DisponibilidadEmpleadoController;
 use App\Http\Controllers\EmpleadoController;
+use App\Http\Controllers\EmpresaController;
 use App\Http\Controllers\MunicipioController;
 use App\Http\Controllers\ServicioController;
 use App\Http\Controllers\UserController;
@@ -103,6 +104,10 @@ Route::middleware(['auth'])->group(function () {
         Route::put('/modificarHorario/{id}', [DisponibilidadEmpleadoController::class, 'modificar'])->name('modificarHorario');
         //Eliminar un horario
         Route::delete('/borrarHorario/{id}', [DisponibilidadEmpleadoController::class, 'borrar'])->name('borrarHorario');
+
+        // --- Estadisticas
+        Route::get('/estadisticas1', [EmpresaController::class, 'estadisticas1'])->name('estadisticas1');
+
     });
 
     //Rol Empresa y Empleado
@@ -162,7 +167,7 @@ Route::middleware(['auth'])->group(function () {
         //Cancelar cita
         Route::post('/cancelarCita/{id}', [CitasController::class, 'cancelarCita'])->name('cancelarCita');
         //Solicitar una cita
-        Route::post('/nuevaCita_Cliente', [CitasController::class, 'nuevaCita_Cliente'])->name('nuevaCita_Cliente');
+        Route::post('/nuevaCita_Cliente/{id}', [CitasController::class, 'nuevaCita_Cliente'])->name('nuevaCita_Cliente');
 
         // --- Servicios ofrecidos
 
