@@ -41,8 +41,6 @@
 
     <script src="https://cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
-    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js"></script>
-
     {{-- asset --}}
 
     <link rel="icon" href="{{ asset('img/icono.png') }}" type="image/x-icon">

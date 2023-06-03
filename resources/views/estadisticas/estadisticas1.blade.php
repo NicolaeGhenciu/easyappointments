@@ -8,6 +8,8 @@
 
 @section('linkScript')
 
+    <script src="https://cdn.jsdelivr.net/npm/chartist-plugin-tooltips@0.0.17/dist/chartist-plugin-tooltip.min.js"></script>
+
     <style>
         .chartist-tooltip {
             position: relative;
