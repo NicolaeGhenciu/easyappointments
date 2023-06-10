@@ -21,15 +21,13 @@
         tr,
         td,
         th {
-            text-align: center;
+            text-align: left;
         }
 
         @media screen and (max-width: 767px) {
 
             #tabla-empleados td:nth-child(1),
             #tabla-empleados th:nth-child(1),
-            #tabla-empleados td:nth-child(3),
-            #tabla-empleados th:nth-child(3),
             #tabla-empleados td:nth-child(4),
             #tabla-empleados th:nth-child(4),
             #tabla-empleados td:nth-child(5),

@@ -107,7 +107,7 @@
             };
 
             // Crear una instancia de Chartist y generar el gráfico de barras
-            var chart = new Chartist.Line('.ct-chart', chartData, options);
+            var chart = new Chartist.Bar('.ct-chart', chartData, options);
 
             // Agregar eventos de mouseover y mouseout para mostrar y ocultar tooltips
             var tooltip = document.querySelector('.chartist-tooltip');

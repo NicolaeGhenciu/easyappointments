@@ -159,7 +159,7 @@
 
             <div id="register-form" style="display: none">
                 <hr>
-                <h3 class="d-flex justify-content-center">¿Que eres?</h3>
+                <h3 class="d-flex justify-content-center">¿Qué eres?</h3>
                 <div class="d-flex justify-content-center">
                     <div class="btn-group" role="group" aria-label="Basic mixed styles example">
                         <button type="button" class="btn btn-primary" onclick="showRegisterCliente()">Cliente</button>

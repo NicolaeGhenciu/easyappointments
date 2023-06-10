@@ -26,7 +26,7 @@
         tr,
         td,
         th {
-            text-align: center;
+            text-align: left;
         }
 
         @media screen and (max-width: 767px) {

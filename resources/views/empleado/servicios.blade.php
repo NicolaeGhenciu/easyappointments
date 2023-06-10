@@ -21,13 +21,17 @@
         tr,
         td,
         th {
-            text-align: center;
+            text-align: left;
         }
 
         @media screen and (max-width: 767px) {
 
             #tabla-servicios td:nth-child(3),
-            #tabla-servicios th:nth-child(3) {
+            #tabla-servicios th:nth-child(3),
+            #tabla-servicios td:nth-child(4),
+            #tabla-servicios th:nth-child(4),
+            #tabla-servicios td:nth-child(5),
+            #tabla-servicios th:nth-child(5) {
                 display: none;
             }
         }
